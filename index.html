@@ -5,144 +5,124 @@
   <title>StaffHealth Workforce Stability Index (WSI)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      /* StaffHealth-ish palette */
-      --sh-blue: #0054a6;
-      --sh-blue-light: #e7f0fb;
-      --sh-blue-soft: #f4f7fc;
-      --sh-black: #222222;
-      --sh-gray: #5f6470;
-      --sh-border: #d0d4dc;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    /* === Global layout & colors (aligned to original SHSI) === */
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
       padding: 0;
-      background: #f1f3f6;
-      color: var(--sh-black);
+      background: #f4f5f7;
+      color: #222222;
     }
 
-    .page {
-      max-width: 1120px;
-      margin: 0 auto 40px;
-      padding: 20px 16px 40px;
+    /* === SHSI-style top header & mode banner === */
+    .shsi-header {
+      width: 100%;
+      margin: 0;
+      padding: 0;
     }
 
-    /* HEADER / BRANDING */
-
-    .sh-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      border: 1px solid #e1e5ee;
+    .shsi-hero {
+      background: #111111;
+      color: #ffffff;
+      text-align: center;
+      padding: 18px 12px 14px;
     }
 
-    .sh-logo-wrap {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--sh-blue-soft);
-    }
-
-    .sh-logo-wrap img {
-      max-width: 64px;
-      max-height: 64px;
-      display: block;
-    }
-
-    .sh-header-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .sh-header-title {
+    .shsi-title {
       font-size: 1.2rem;
       font-weight: 700;
-      color: var(--sh-blue);
-      letter-spacing: 0.01em;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .sh-header-subtitle {
-      font-size: 0.86rem;
-      color: var(--sh-gray);
+    .shsi-title-brand {
+      color: #1f66d1; /* StaffHealth blue accent */
+      margin-right: 4px;
     }
 
-    /* PAGE TITLE */
+    .shsi-title-main {
+      color: #ffffff;
+    }
+
+    .shsi-tagline {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: #dddddd;
+      max-width: 880px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .shsi-mode-banner {
+      background: #1f66d1;
+      color: #ffffff;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* === Main page content (cards etc.) === */
+    .page {
+      max-width: 1100px;
+      margin: 18px auto 40px;
+      padding: 0 16px 40px;
+    }
 
     h1 {
-      font-size: 1.6rem;
-      margin: 10px 0 2px;
-      color: var(--sh-black);
-    }
-
-    .subtitle {
-      color: var(--sh-gray);
-      margin: 0 0 14px;
-      font-size: 0.9rem;
-      max-width: 840px;
+      font-size: 1.7rem;
+      margin-bottom: 4px;
+      font-weight: 700;
     }
 
     h2 {
-      font-size: 1.1rem;
-      margin: 12px 0 6px;
-      color: var(--sh-blue);
+      font-size: 1.2rem;
+      margin: 20px 0 8px;
+      font-weight: 600;
+      color: #0054a6; /* StaffHealth blue */
     }
 
     p {
       margin: 4px 0;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
-    /* GRID / CARDS */
+    .subtitle {
+      color: #555;
+      margin-bottom: 16px;
+      max-width: 840px;
+      font-size: 0.9rem;
+    }
 
+    /* === Cards & grid, SHSI-style === */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 16px;
-      margin-top: 12px;
+      margin-top: 16px;
     }
 
     .card {
       background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      padding: 14px 14px 16px;
-      border: 1px solid #e2e5ee;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 16px 16px 18px;
+      border: 1px solid #e0e3eb;
     }
 
     .card h3 {
-      margin: 0 0 6px;
-      font-size: 0.98rem;
-      color: var(--sh-blue);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .card h3::before {
-      content: "●";
-      font-size: 0.6rem;
-      color: var(--sh-blue);
+      margin-top: 0;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #222;
     }
 
     .card p {
-      font-size: 0.78rem;
-      color: var(--sh-gray);
+      font-size: 0.8rem;
+      color: #666;
       margin-bottom: 8px;
     }
 
@@ -159,40 +139,38 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      font-size: 0.82rem;
+      font-size: 0.86rem;
       margin-bottom: 2px;
-      color: var(--sh-black);
     }
 
     .field small {
-      color: #8a8f99;
-      font-size: 0.72rem;
+      color: #777;
+      font-size: 0.75rem;
       margin-left: 6px;
     }
 
     input[type="number"] {
       width: 100%;
       padding: 5px 6px;
-      border-radius: 8px;
-      border: 1px solid var(--sh-border);
-      font-size: 0.86rem;
+      border-radius: 6px;
+      border: 1px solid #d0d4dc;
+      font-size: 0.88rem;
+      box-sizing: border-box;
       font-family: inherit;
-      transition: border-color 0.12s ease, box-shadow 0.12s ease;
     }
 
     input[type="number"]:focus {
       outline: none;
-      border-color: var(--sh-blue);
-      box-shadow: 0 0 0 2px rgba(0,84,166,0.12);
+      border-color: #0054a6;
+      box-shadow: 0 0 0 2px rgba(0,84,166,0.16);
     }
 
-    /* SUMMARY */
-
+    /* === Summary layout === */
     .summary-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
       gap: 16px;
-      margin-top: 18px;
+      margin-top: 20px;
     }
 
     .summary-main {
@@ -204,26 +182,26 @@
     .score-badge {
       display: inline-flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 8px;
       margin-top: 4px;
     }
 
     .score-number {
-      font-size: 2.3rem;
+      font-size: 2.2rem;
       font-weight: 700;
-      color: var(--sh-blue);
+      color: #0054a6;
     }
 
     .score-tag {
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 999px;
       font-size: 0.75rem;
       font-weight: 600;
-      border: 1px solid var(--sh-border);
+      border: 1px solid #ccc;
       text-transform: uppercase;
-      letter-spacing: .04em;
-      background: var(--sh-blue-soft);
-      color: var(--sh-black);
+      letter-spacing: .03em;
+      background: #f5f6fb;
+      color: #444;
     }
 
     .score-tag.high-risk {
@@ -247,41 +225,41 @@
     .kpi-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 16px;
       margin-top: 8px;
     }
 
     .kpi {
       flex: 1 1 180px;
-      background: var(--sh-blue-soft);
-      border-radius: 10px;
+      background: #f8f9fb;
+      border-radius: 8px;
       padding: 8px 10px;
-      font-size: 0.84rem;
-      border: 1px solid #d7e1f3;
+      font-size: 0.86rem;
+      border: 1px solid #e0e3ea;
     }
 
     .kpi-label {
-      color: var(--sh-gray);
-      margin-bottom: 3px;
+      color: #666;
+      margin-bottom: 4px;
     }
 
     .kpi-value {
-      font-weight: 700;
-      font-size: 0.96rem;
-      color: var(--sh-black);
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: #222;
     }
 
     .scenario-card h4 {
       margin: 0 0 6px;
       font-size: 0.95rem;
-      color: var(--sh-black);
+      color: #222;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 6px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
     }
 
     th, td {
@@ -291,9 +269,9 @@
     }
 
     th {
-      background: var(--sh-blue-soft);
+      background: #f3f4f8;
       font-weight: 600;
-      color: var(--sh-black);
+      color: #222;
     }
 
     .delta-positive {
@@ -307,15 +285,15 @@
     }
 
     .note {
-      font-size: 0.76rem;
-      color: var(--sh-gray);
+      font-size: 0.78rem;
+      color: #777;
       margin-top: 6px;
     }
 
     .footer-note {
       margin-top: 20px;
-      font-size: 0.76rem;
-      color: var(--sh-gray);
+      font-size: 0.78rem;
+      color: #777;
       max-width: 860px;
     }
 
@@ -323,46 +301,33 @@
       .summary-grid {
         grid-template-columns: 1fr;
       }
-
-      .sh-header {
-        flex-direction: row;
-        align-items: center;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .sh-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .sh-logo-wrap {
-        width: 64px;
-        height: 64px;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <!-- StaffHealth branded header -->
-    <div class="sh-header">
-      <div class="sh-logo-wrap">
-        <!-- Replace 'staffhealth-logo.png' with your actual logo filename/path -->
-        <img src="staffhealth-logo.png" alt="StaffHealth logo" />
+  <!-- SHSI-style header shared between calculators -->
+  <div class="shsi-header">
+    <div class="shsi-hero">
+      <div class="shsi-title">
+        <span class="shsi-title-brand">STAFFHEALTH</span>
+        <span class="shsi-title-main">STABILITY INDEX™</span>
       </div>
-      <div class="sh-header-text">
-        <div class="sh-header-title">StaffHealth Workforce Stability Index (WSI)</div>
-        <div class="sh-header-subtitle">
-          Quantifying volatility, risk, and workforce stability to power value-first conversations.
-        </div>
+      <div class="shsi-tagline">
+        Directional diagnostic that scores staffing “health” across volatility, risk, and workforce stability —
+        designed for single communities or portfolios. This screen is the Workforce Stability (WSI) view.
       </div>
     </div>
+    <div class="shsi-mode-banner">
+      SINGLE COMMUNITY MODE — WORKFORCE STABILITY EDITION (WSI)
+    </div>
+  </div>
 
+  <!-- Main WSI content -->
+  <div class="page">
     <h1>Workforce Stability Snapshot</h1>
     <p class="subtitle">
-      Adjust the inputs below to see how staffing volatility, financial exposure, operational risk, 
-      and workforce pipeline strength roll up into a single Workforce Stability Index and economic view.
+      Adjust the inputs below to see how staffing volatility, financial exposure, operational risk, and workforce pipeline strength
+      roll up into a single Workforce Stability Index and economic view.
     </p>
 
     <!-- INPUT GRID -->
@@ -454,7 +419,7 @@
         </div>
       </div>
 
-      <!-- Dimension 4: Workforce Stability (Candidate Sourcing / Pipeline) -->
+      <!-- Dimension 4: Workforce Stability (Pipeline) -->
       <div class="card">
         <h3>4. Workforce Stability (Pipeline)</h3>
         <p>
@@ -495,7 +460,7 @@
     <div class="summary-grid">
       <div class="card summary-main">
         <h2>Stability Index & Economics</h2>
-        <p style="font-size:0.84rem; color:var(--sh-gray);">
+        <p style="font-size:0.86rem; color:#555;">
           This summarizes the current state of the workforce and the modeled economic impact of volatility and pipeline weakness.
         </p>
 
@@ -523,14 +488,14 @@
         </div>
 
         <p class="note">
-          Dollar figures are modeled estimates to frame the economic story. Assumptions (e.g., max volatility impact, stabilizable percentage) 
-          can be tuned with PE / finance.
+          Dollar figures are modeled estimates to frame the economic story. Assumptions
+          (e.g., max volatility impact, stabilizable percentage) can be tuned with your PE / finance partners.
         </p>
       </div>
 
       <div class="card scenario-card">
         <h2>Candidate Sourcing Scenario</h2>
-        <p style="font-size:0.8rem; color:var(--sh-gray);">
+        <p style="font-size:0.82rem; color:#555;">
           Illustrative view of what happens if StaffHealth runs a focused candidate sourcing program
           (e.g., reducing workforce-pipeline risk by ~30%).
         </p>
@@ -567,14 +532,14 @@
           </tbody>
         </table>
         <p class="note">
-          Assumes a 30% improvement in workforce stability metrics through StaffHealth candidate sourcing 
+          Assumes a 30% improvement in workforce stability metrics through StaffHealth candidate sourcing
           (complimentary when utilizing our platform for PRN coverage).
         </p>
       </div>
     </div>
 
     <p class="footer-note">
-      Internal concept model for strategy, portfolio conversations, and refinement with leadership/finance. 
+      Internal concept model — for strategy, portfolio conversations, and refinement with leadership / finance.
       The value is in framing the true cost of volatility and the upside of a StaffHealth workforce stability partnership.
     </p>
   </div>
@@ -594,7 +559,7 @@
     }
 
     function updateSHSI() {
-      // --- Read inputs & clamp ---
+      // --- Read inputs & clamp to reasonable ranges ---
       const openShifts      = clamp(document.getElementById("openShifts").value, 0, 50);
       const percentPRN      = clamp(document.getElementById("percentPRN").value, 0, 100);
       const callOffs        = clamp(document.getElementById("callOffs").value, 0, 20);
@@ -612,7 +577,7 @@
       const timeToFill      = clamp(document.getElementById("timeToFill").value, 0, 120);
       const recruitSpend    = clamp(document.getElementById("recruitSpend").value, 0, 50000);
 
-      // --- Normalize each dimension to 0–25 risk slice ---
+      // --- Normalize each dimension to a 0–25 "risk slice" ---
 
       // 1) Staffing Volatility
       const volScore =
@@ -633,8 +598,8 @@
       const totalRisk = volScore + finScore + opScore + workforceScore;
       const shsiScore = Math.round(100 - totalRisk);
 
-      // --- Economic views ---
-      // Assume: at max risk (WSI ~0) volatility costs ~ $2M / year.
+      // --- Derived economic views ---
+      // Assume: at max risk (Index ~0) volatility costs ~ $2M / year.
       const annualVolatilityCost = (totalRisk / 100) * 2000000;
 
       // Assume: StaffHealth + Verified can realistically stabilize ~40% of that.
@@ -673,6 +638,7 @@
       const improvedVolCost = (improvedTotalRisk / 100) * 2000000;
       const improvedWorkforceDrag = (improvedWorkforceScore / 25) * 1000000;
 
+      // Update scenario table
       document.getElementById("currentShsiCell").textContent = isNaN(shsiScore) ? "–" : shsiScore;
       document.getElementById("withSourcingShsiCell").textContent = isNaN(improvedShsi) ? "–" : improvedShsi;
 
