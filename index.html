@@ -64,7 +64,7 @@
       text-transform: uppercase;
     }
 
-    /* === Main page content (cards etc.) === */
+    /* === Main page content === */
     .page {
       max-width: 1100px;
       margin: 18px auto 40px;
@@ -81,7 +81,7 @@
       font-size: 1.2rem;
       margin: 20px 0 8px;
       font-weight: 600;
-      color: #0054a6; /* StaffHealth blue */
+      color: #0054a6;
     }
 
     p {
@@ -96,7 +96,7 @@
       font-size: 0.9rem;
     }
 
-    /* === Cards & grid, SHSI-style === */
+    /* === Cards & grid === */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -163,6 +163,27 @@
       outline: none;
       border-color: #0054a6;
       box-shadow: 0 0 0 2px rgba(0,84,166,0.16);
+    }
+
+    /* === Mode card === */
+    .mode-card {
+      margin-bottom: 16px;
+    }
+
+    .mode-options {
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+
+    .mode-options label {
+      display: block;
+      font-size: 0.86rem;
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+
+    .mode-options input {
+      margin-right: 6px;
     }
 
     /* === Summary layout === */
@@ -305,7 +326,7 @@
   </style>
 </head>
 <body>
-  <!-- SHSI-style header shared between calculators -->
+  <!-- Shared SHSI-style header -->
   <div class="shsi-header">
     <div class="shsi-hero">
       <div class="shsi-title">
@@ -317,24 +338,46 @@
         designed for single communities or portfolios. This screen is the Workforce Stability (WSI) view.
       </div>
     </div>
-    <div class="shsi-mode-banner">
+    <div class="shsi-mode-banner" id="modeBanner">
       SINGLE COMMUNITY MODE — WORKFORCE STABILITY EDITION (WSI)
     </div>
   </div>
 
   <!-- Main WSI content -->
   <div class="page">
-    <h1>Workforce Stability Snapshot</h1>
-    <p class="subtitle">
+    <h1 id="snapshotTitle">Workforce Stability Snapshot</h1>
+    <p class="subtitle" id="snapshotSubtitle">
       Adjust the inputs below to see how staffing volatility, financial exposure, operational risk, and workforce pipeline strength
       roll up into a single Workforce Stability Index and economic view.
     </p>
+
+    <!-- 1. Select Mode -->
+    <div class="card mode-card">
+      <h3>1. Select Mode</h3>
+      <p style="font-size:0.82rem; color:#555;">
+        Use <strong>Single Community Mode</strong> for ED / building-level discussions.
+        Use <strong>Portfolio Mode</strong> for VP Ops / portfolio roll-ups using typical or weighted-average values.
+      </p>
+      <div class="mode-options">
+        <label>
+          <input type="radio" name="mode" value="single" checked />
+          Single Community Mode (ED / building-level)
+        </label>
+        <label>
+          <input type="radio" name="mode" value="portfolio" />
+          Portfolio Mode (VP Ops / portfolio roll-up)
+        </label>
+      </div>
+      <p class="note">
+        In Portfolio Mode, enter representative values (or averages) across the communities you want to model.
+      </p>
+    </div>
 
     <!-- INPUT GRID -->
     <div class="grid">
       <!-- Dimension 1: Staffing Volatility -->
       <div class="card">
-        <h3>1. Staffing Volatility</h3>
+        <h3>2. Staffing Volatility</h3>
         <p>
           How choppy is the current schedule? These inputs capture day-to-day instability on the floor.
         </p>
@@ -363,7 +406,7 @@
 
       <!-- Dimension 2: Financial Exposure -->
       <div class="card">
-        <h3>2. Financial Exposure</h3>
+        <h3>3. Financial Exposure</h3>
         <p>
           Direct cost impact of volatility — especially overtime and premium labor.
         </p>
@@ -392,7 +435,7 @@
 
       <!-- Dimension 3: Operational & Compliance Risk -->
       <div class="card">
-        <h3>3. Operational &amp; Compliance Risk</h3>
+        <h3>4. Operational &amp; Compliance Risk</h3>
         <p>
           Downstream impacts: PBJ, surveys, and leadership drag from instability.
         </p>
@@ -421,7 +464,7 @@
 
       <!-- Dimension 4: Workforce Stability (Pipeline) -->
       <div class="card">
-        <h3>4. Workforce Stability (Pipeline)</h3>
+        <h3>5. Workforce Stability (Pipeline)</h3>
         <p>
           How strong is the permanent staff pipeline? This is where candidate sourcing moves the needle.
         </p>
@@ -558,6 +601,30 @@
       return sign + "$" + abs.toLocaleString(undefined, { maximumFractionDigits: 0 });
     }
 
+    function getMode() {
+      const checked = document.querySelector("input[name='mode']:checked");
+      return checked ? checked.value : "single";
+    }
+
+    function updateModeUI() {
+      const mode = getMode();
+      const titleEl = document.getElementById("snapshotTitle");
+      const subtitleEl = document.getElementById("snapshotSubtitle");
+      const bannerEl = document.getElementById("modeBanner");
+
+      if (mode === "portfolio") {
+        titleEl.textContent = "Portfolio Workforce Stability Snapshot";
+        subtitleEl.textContent =
+          "Use typical or weighted-average values across a cluster or portfolio to see its overall Workforce Stability Index and modeled volatility and pipeline economics.";
+        bannerEl.textContent = "PORTFOLIO MODE — WORKFORCE STABILITY EDITION (WSI)";
+      } else {
+        titleEl.textContent = "Workforce Stability Snapshot";
+        subtitleEl.textContent =
+          "Adjust the inputs below to see how staffing volatility, financial exposure, operational risk, and workforce pipeline strength roll up into a single Workforce Stability Index and economic view.";
+        bannerEl.textContent = "SINGLE COMMUNITY MODE — WORKFORCE STABILITY EDITION (WSI)";
+      }
+    }
+
     function updateSHSI() {
       // --- Read inputs & clamp to reasonable ranges ---
       const openShifts      = clamp(document.getElementById("openShifts").value, 0, 50);
@@ -578,20 +645,15 @@
       const recruitSpend    = clamp(document.getElementById("recruitSpend").value, 0, 50000);
 
       // --- Normalize each dimension to a 0–25 "risk slice" ---
-
-      // 1) Staffing Volatility
       const volScore =
         ((openShifts / 50) + (percentPRN / 100) + (callOffs / 20)) / 3 * 25;
 
-      // 2) Financial Exposure
       const finScore =
         ((otHours / 500) + (otPremium / 100) + (agencyPremium / 100)) / 3 * 25;
 
-      // 3) Operational & Compliance Risk
       const opScore =
         ((pbjRisk / 10) + (surveyCitations / 10) + (leaderTurnover / 10)) / 3 * 25;
 
-      // 4) Workforce Stability (Pipeline)
       const workforceScore =
         ((turnoverRate / 100) + (vacancies / 20) + (timeToFill / 120) + (recruitSpend / 50000)) / 4 * 25;
 
@@ -599,13 +661,8 @@
       const shsiScore = Math.round(100 - totalRisk);
 
       // --- Derived economic views ---
-      // Assume: at max risk (Index ~0) volatility costs ~ $2M / year.
       const annualVolatilityCost = (totalRisk / 100) * 2000000;
-
-      // Assume: StaffHealth + Verified can realistically stabilize ~40% of that.
       const stabilizableUpside = annualVolatilityCost * 0.4;
-
-      // Assume: workforce pipeline weakness (dimension 4) can represent up to $1M drag.
       const workforceDragCost = (workforceScore / 25) * 1000000;
 
       // --- Update main summary UI ---
@@ -630,7 +687,6 @@
       document.getElementById("workforceDrag").textContent = formatCurrency(workforceDragCost);
 
       // --- Candidate Sourcing Scenario ---
-      // Assume sourcing improves workforce stability metrics by ~30%.
       const improvedWorkforceScore = workforceScore * 0.7;
       const improvedTotalRisk = volScore + finScore + opScore + improvedWorkforceScore;
       const improvedShsi = Math.round(100 - improvedTotalRisk);
@@ -638,7 +694,6 @@
       const improvedVolCost = (improvedTotalRisk / 100) * 2000000;
       const improvedWorkforceDrag = (improvedWorkforceScore / 25) * 1000000;
 
-      // Update scenario table
       document.getElementById("currentShsiCell").textContent = isNaN(shsiScore) ? "–" : shsiScore;
       document.getElementById("withSourcingShsiCell").textContent = isNaN(improvedShsi) ? "–" : improvedShsi;
 
@@ -673,6 +728,16 @@
       inputs.forEach(input => {
         input.addEventListener("input", updateSHSI);
       });
+
+      const modeInputs = document.querySelectorAll("input[name='mode']");
+      modeInputs.forEach(input => {
+        input.addEventListener("change", function () {
+          updateModeUI();
+          updateSHSI();
+        });
+      });
+
+      updateModeUI();
       updateSHSI();
     });
   </script>
