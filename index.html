@@ -96,7 +96,7 @@
       font-size: 0.9rem;
     }
 
-    /* === Cards & grid === */
+    /* === Cards & grids === */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -165,7 +165,7 @@
       box-shadow: 0 0 0 2px rgba(0,84,166,0.16);
     }
 
-    /* === Mode card === */
+    /* Mode card */
     .mode-card {
       margin-bottom: 16px;
     }
@@ -186,7 +186,45 @@
       margin-right: 6px;
     }
 
-    /* === Summary layout === */
+    /* Show/hide depending on mode */
+    .single-only { display: block; }
+    .portfolio-only { display: none; }
+
+    body.mode-portfolio .single-only { display: none; }
+    body.mode-portfolio .portfolio-only { display: block; }
+
+    /* Portfolio distribution table */
+    .dist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .dist-table th,
+    .dist-table td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #e0e3ea;
+      text-align: left;
+    }
+
+    .dist-table th {
+      background: #f3f4f8;
+      font-weight: 600;
+    }
+
+    .dist-bands {
+      font-size: 0.76rem;
+      color: #666;
+    }
+
+    .small-input {
+      width: 70px;
+      padding: 3px 4px;
+      font-size: 0.8rem;
+    }
+
+    /* Summary layout */
     .summary-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
@@ -325,7 +363,7 @@
     }
   </style>
 </head>
-<body>
+<body class="mode-single">
   <!-- Shared SHSI-style header -->
   <div class="shsi-header">
     <div class="shsi-hero">
@@ -356,7 +394,7 @@
       <h3>1. Select Mode</h3>
       <p style="font-size:0.82rem; color:#555;">
         Use <strong>Single Community Mode</strong> for ED / building-level discussions.
-        Use <strong>Portfolio Mode</strong> for VP Ops / portfolio roll-ups using typical or weighted-average values.
+        Use <strong>Portfolio Mode</strong> for VP Ops / portfolio roll-ups using distributions of communities across risk bands.
       </p>
       <div class="mode-options">
         <label>
@@ -369,12 +407,13 @@
         </label>
       </div>
       <p class="note">
-        In Portfolio Mode, enter representative values (or averages) across the communities you want to model.
+        In Portfolio Mode, you enter how many communities fall into each risk band for every metric. The tool calculates portfolio-wide
+        averages and rolls them into a single WSI score and economic view.
       </p>
     </div>
 
-    <!-- INPUT GRID -->
-    <div class="grid">
+    <!-- SINGLE COMMUNITY INPUT GRID -->
+    <div class="grid single-only">
       <!-- Dimension 1: Staffing Volatility -->
       <div class="card">
         <h3>2. Staffing Volatility</h3>
@@ -499,6 +538,208 @@
       </div>
     </div>
 
+    <!-- PORTFOLIO DISTRIBUTION INPUTS -->
+    <div class="grid portfolio-only">
+      <!-- Portfolio context + staffing volatility dist -->
+      <div class="card">
+        <h3>2. Portfolio Context & Staffing Volatility</h3>
+        <p style="font-size:0.8rem; color:#555;">
+          Enter how many communities fall into each band. The tool converts this into portfolio-wide average values.
+        </p>
+        <div class="field">
+          <label>
+            <span>Total communities in this portfolio</span>
+            <small>(for your reference)</small>
+          </label>
+          <input type="number" id="portfolioSize" min="1" max="200" value="20" />
+        </div>
+
+        <table class="dist-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Low band</th>
+              <th>Mid band</th>
+              <th>High band</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                Open shifts / week
+                <div class="dist-bands">0–5 • 6–10 • 11+</div>
+              </td>
+              <td><input type="number" id="openShiftsLow" class="small-input" min="0" value="6" /></td>
+              <td><input type="number" id="openShiftsMid" class="small-input" min="0" value="9" /></td>
+              <td><input type="number" id="openShiftsHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+            <tr>
+              <td>
+                % of shifts via agency/PRN
+                <div class="dist-bands">0–25% • 26–50% • 51%+</div>
+              </td>
+              <td><input type="number" id="percentPRNLow" class="small-input" min="0" value="7" /></td>
+              <td><input type="number" id="percentPRNMid" class="small-input" min="0" value="8" /></td>
+              <td><input type="number" id="percentPRNHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+            <tr>
+              <td>
+                Last-minute call-offs / week
+                <div class="dist-bands">0–2 • 3–5 • 6+</div>
+              </td>
+              <td><input type="number" id="callOffsLow" class="small-input" min="0" value="8" /></td>
+              <td><input type="number" id="callOffsMid" class="small-input" min="0" value="7" /></td>
+              <td><input type="number" id="callOffsHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Financial exposure dist -->
+      <div class="card">
+        <h3>3. Financial Exposure (Portfolio)</h3>
+        <table class="dist-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Low band</th>
+              <th>Mid band</th>
+              <th>High band</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                Monthly OT hours
+                <div class="dist-bands">0–100 • 101–250 • 251+</div>
+              </td>
+              <td><input type="number" id="otHoursLow" class="small-input" min="0" value="7" /></td>
+              <td><input type="number" id="otHoursMid" class="small-input" min="0" value="9" /></td>
+              <td><input type="number" id="otHoursHigh" class="small-input" min="0" value="4" /></td>
+            </tr>
+            <tr>
+              <td>
+                OT premium vs base
+                <div class="dist-bands">0–25% • 26–50% • 51%+</div>
+              </td>
+              <td><input type="number" id="otPremiumLow" class="small-input" min="0" value="6" /></td>
+              <td><input type="number" id="otPremiumMid" class="small-input" min="0" value="9" /></td>
+              <td><input type="number" id="otPremiumHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+            <tr>
+              <td>
+                Agency/PRN premium vs core staff
+                <div class="dist-bands">0–20% • 21–40% • 41%+</div>
+              </td>
+              <td><input type="number" id="agencyPremiumLow" class="small-input" min="0" value="5" /></td>
+              <td><input type="number" id="agencyPremiumMid" class="small-input" min="0" value="10" /></td>
+              <td><input type="number" id="agencyPremiumHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Operational & compliance dist -->
+      <div class="card">
+        <h3>4. Operational &amp; Compliance Risk (Portfolio)</h3>
+        <table class="dist-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Low band</th>
+              <th>Mid band</th>
+              <th>High band</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                PBJ exposure / risk score
+                <div class="dist-bands">0–3 • 4–7 • 8–10</div>
+              </td>
+              <td><input type="number" id="pbjRiskLow" class="small-input" min="0" value="8" /></td>
+              <td><input type="number" id="pbjRiskMid" class="small-input" min="0" value="7" /></td>
+              <td><input type="number" id="pbjRiskHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+            <tr>
+              <td>
+                Staffing-related survey citations (12 mo)
+                <div class="dist-bands">0 • 1–2 • 3+</div>
+              </td>
+              <td><input type="number" id="surveyCitationsLow" class="small-input" min="0" value="9" /></td>
+              <td><input type="number" id="surveyCitationsMid" class="small-input" min="0" value="7" /></td>
+              <td><input type="number" id="surveyCitationsHigh" class="small-input" min="0" value="4" /></td>
+            </tr>
+            <tr>
+              <td>
+                Leadership turnover events (ED/DON/ADON, 12 mo)
+                <div class="dist-bands">0–1 • 2–3 • 4+</div>
+              </td>
+              <td><input type="number" id="leaderTurnoverLow" class="small-input" min="0" value="10" /></td>
+              <td><input type="number" id="leaderTurnoverMid" class="small-input" min="0" value="6" /></td>
+              <td><input type="number" id="leaderTurnoverHigh" class="small-input" min="0" value="4" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Workforce stability dist -->
+      <div class="card">
+        <h3>5. Workforce Stability (Pipeline) — Portfolio</h3>
+        <table class="dist-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Low band</th>
+              <th>Mid band</th>
+              <th>High band</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                Annual clinical staff turnover rate
+                <div class="dist-bands">0–30% • 31–60% • 61%+</div>
+              </td>
+              <td><input type="number" id="turnoverRateLow" class="small-input" min="0" value="5" /></td>
+              <td><input type="number" id="turnoverRateMid" class="small-input" min="0" value="9" /></td>
+              <td><input type="number" id="turnoverRateHigh" class="small-input" min="0" value="6" /></td>
+            </tr>
+            <tr>
+              <td>
+                Open clinical FTE vacancies
+                <div class="dist-bands">0–1 • 2–4 • 5+</div>
+              </td>
+              <td><input type="number" id="vacanciesLow" class="small-input" min="0" value="7" /></td>
+              <td><input type="number" id="vacanciesMid" class="small-input" min="0" value="8" /></td>
+              <td><input type="number" id="vacanciesHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+            <tr>
+              <td>
+                Average time-to-fill (RN/LVN/CNA)
+                <div class="dist-bands">0–30 d • 31–60 d • 61+ d</div>
+              </td>
+              <td><input type="number" id="timeToFillLow" class="small-input" min="0" value="6" /></td>
+              <td><input type="number" id="timeToFillMid" class="small-input" min="0" value="9" /></td>
+              <td><input type="number" id="timeToFillHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+            <tr>
+              <td>
+                Monthly external recruiting spend
+                <div class="dist-bands">$0–$5k • $5,001–$15k • $15k+</div>
+              </td>
+              <td><input type="number" id="recruitSpendLow" class="small-input" min="0" value="8" /></td>
+              <td><input type="number" id="recruitSpendMid" class="small-input" min="0" value="7" /></td>
+              <td><input type="number" id="recruitSpendHigh" class="small-input" min="0" value="5" /></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">
+          Band definitions are directional. The model converts these distributions into portfolio-wide average values for each metric.
+        </p>
+      </div>
+    </div>
+
     <!-- SUMMARY / OUTPUT -->
     <div class="summary-grid">
       <div class="card summary-main">
@@ -613,11 +854,15 @@
       const bannerEl = document.getElementById("modeBanner");
 
       if (mode === "portfolio") {
+        document.body.classList.remove("mode-single");
+        document.body.classList.add("mode-portfolio");
         titleEl.textContent = "Portfolio Workforce Stability Snapshot";
         subtitleEl.textContent =
-          "Use typical or weighted-average values across a cluster or portfolio to see its overall Workforce Stability Index and modeled volatility and pipeline economics.";
+          "Use distributions across your portfolio (how many communities fall into each band) to see an overall Workforce Stability Index and portfolio-wide volatility and pipeline economics.";
         bannerEl.textContent = "PORTFOLIO MODE — WORKFORCE STABILITY EDITION (WSI)";
       } else {
+        document.body.classList.remove("mode-portfolio");
+        document.body.classList.add("mode-single");
         titleEl.textContent = "Workforce Stability Snapshot";
         subtitleEl.textContent =
           "Adjust the inputs below to see how staffing volatility, financial exposure, operational risk, and workforce pipeline strength roll up into a single Workforce Stability Index and economic view.";
@@ -625,26 +870,173 @@
       }
     }
 
+    // Helper to compute weighted average from bands
+    function weightedAverage(lowCount, midCount, highCount, lowRep, midRep, highRep) {
+      const cLow = Number(lowCount) || 0;
+      const cMid = Number(midCount) || 0;
+      const cHigh = Number(highCount) || 0;
+      const total = cLow + cMid + cHigh;
+      if (total === 0) return 0;
+      return (cLow * lowRep + cMid * midRep + cHigh * highRep) / total;
+    }
+
+    function getInputs() {
+      const mode = getMode();
+
+      if (mode === "single") {
+        // Single community: read direct numeric values
+        return {
+          openShifts: clamp(document.getElementById("openShifts").value, 0, 50),
+          percentPRN: clamp(document.getElementById("percentPRN").value, 0, 100),
+          callOffs: clamp(document.getElementById("callOffs").value, 0, 20),
+          otHours: clamp(document.getElementById("otHours").value, 0, 500),
+          otPremium: clamp(document.getElementById("otPremium").value, 0, 100),
+          agencyPremium: clamp(document.getElementById("agencyPremium").value, 0, 100),
+          pbjRisk: clamp(document.getElementById("pbjRisk").value, 0, 10),
+          surveyCitations: clamp(document.getElementById("surveyCitations").value, 0, 10),
+          leaderTurnover: clamp(document.getElementById("leaderTurnover").value, 0, 10),
+          turnoverRate: clamp(document.getElementById("turnoverRate").value, 0, 100),
+          vacancies: clamp(document.getElementById("vacancies").value, 0, 20),
+          timeToFill: clamp(document.getElementById("timeToFill").value, 0, 120),
+          recruitSpend: clamp(document.getElementById("recruitSpend").value, 0, 50000)
+        };
+      } else {
+        // Portfolio: compute weighted averages from distributions
+
+        // Staffing volatility bands
+        const openShiftsAvg = weightedAverage(
+          document.getElementById("openShiftsLow").value,
+          document.getElementById("openShiftsMid").value,
+          document.getElementById("openShiftsHigh").value,
+          3, 8, 20   // reps for 0–5, 6–10, 11+
+        );
+
+        const percentPRNAvg = weightedAverage(
+          document.getElementById("percentPRNLow").value,
+          document.getElementById("percentPRNMid").value,
+          document.getElementById("percentPRNHigh").value,
+          15, 38, 65   // reps for 0–25, 26–50, 51+
+        );
+
+        const callOffsAvg = weightedAverage(
+          document.getElementById("callOffsLow").value,
+          document.getElementById("callOffsMid").value,
+          document.getElementById("callOffsHigh").value,
+          1, 4, 7     // reps for 0–2, 3–5, 6+
+        );
+
+        // Financial exposure bands
+        const otHoursAvg = weightedAverage(
+          document.getElementById("otHoursLow").value,
+          document.getElementById("otHoursMid").value,
+          document.getElementById("otHoursHigh").value,
+          60, 180, 350   // 0–100, 101–250, 251+
+        );
+
+        const otPremiumAvg = weightedAverage(
+          document.getElementById("otPremiumLow").value,
+          document.getElementById("otPremiumMid").value,
+          document.getElementById("otPremiumHigh").value,
+          15, 38, 65     // 0–25, 26–50, 51+
+        );
+
+        const agencyPremiumAvg = weightedAverage(
+          document.getElementById("agencyPremiumLow").value,
+          document.getElementById("agencyPremiumMid").value,
+          document.getElementById("agencyPremiumHigh").value,
+          10, 30, 55     // 0–20, 21–40, 41+
+        );
+
+        // Operational & compliance bands
+        const pbjRiskAvg = weightedAverage(
+          document.getElementById("pbjRiskLow").value,
+          document.getElementById("pbjRiskMid").value,
+          document.getElementById("pbjRiskHigh").value,
+          1.5, 5.5, 9    // 0–3, 4–7, 8–10
+        );
+
+        const surveyCitationsAvg = weightedAverage(
+          document.getElementById("surveyCitationsLow").value,
+          document.getElementById("surveyCitationsMid").value,
+          document.getElementById("surveyCitationsHigh").value,
+          0, 1.5, 4      // 0, 1–2, 3+
+        );
+
+        const leaderTurnoverAvg = weightedAverage(
+          document.getElementById("leaderTurnoverLow").value,
+          document.getElementById("leaderTurnoverMid").value,
+          document.getElementById("leaderTurnoverHigh").value,
+          0.5, 2.5, 5    // 0–1, 2–3, 4+
+        );
+
+        // Workforce stability bands
+        const turnoverRateAvg = weightedAverage(
+          document.getElementById("turnoverRateLow").value,
+          document.getElementById("turnoverRateMid").value,
+          document.getElementById("turnoverRateHigh").value,
+          20, 45, 75     // 0–30, 31–60, 61+
+        );
+
+        const vacanciesAvg = weightedAverage(
+          document.getElementById("vacanciesLow").value,
+          document.getElementById("vacanciesMid").value,
+          document.getElementById("vacanciesHigh").value,
+          0.5, 3, 6      // 0–1, 2–4, 5+
+        );
+
+        const timeToFillAvg = weightedAverage(
+          document.getElementById("timeToFillLow").value,
+          document.getElementById("timeToFillMid").value,
+          document.getElementById("timeToFillHigh").value,
+          15, 45, 90     // 0–30, 31–60, 61+
+        );
+
+        const recruitSpendAvg = weightedAverage(
+          document.getElementById("recruitSpendLow").value,
+          document.getElementById("recruitSpendMid").value,
+          document.getElementById("recruitSpendHigh").value,
+          2500, 10000, 20000   // 0–5k, 5–15k, 15k+
+        );
+
+        return {
+          openShifts: openShiftsAvg,
+          percentPRN: percentPRNAvg,
+          callOffs: callOffsAvg,
+          otHours: otHoursAvg,
+          otPremium: otPremiumAvg,
+          agencyPremium: agencyPremiumAvg,
+          pbjRisk: pbjRiskAvg,
+          surveyCitations: surveyCitationsAvg,
+          leaderTurnover: leaderTurnoverAvg,
+          turnoverRate: turnoverRateAvg,
+          vacancies: vacanciesAvg,
+          timeToFill: timeToFillAvg,
+          recruitSpend: recruitSpendAvg
+        };
+      }
+    }
+
     function updateSHSI() {
-      // --- Read inputs & clamp to reasonable ranges ---
-      const openShifts      = clamp(document.getElementById("openShifts").value, 0, 50);
-      const percentPRN      = clamp(document.getElementById("percentPRN").value, 0, 100);
-      const callOffs        = clamp(document.getElementById("callOffs").value, 0, 20);
+      const inputs = getInputs();
 
-      const otHours         = clamp(document.getElementById("otHours").value, 0, 500);
-      const otPremium       = clamp(document.getElementById("otPremium").value, 0, 100);
-      const agencyPremium   = clamp(document.getElementById("agencyPremium").value, 0, 100);
+      const openShifts = clamp(inputs.openShifts, 0, 50);
+      const percentPRN = clamp(inputs.percentPRN, 0, 100);
+      const callOffs = clamp(inputs.callOffs, 0, 20);
 
-      const pbjRisk         = clamp(document.getElementById("pbjRisk").value, 0, 10);
-      const surveyCitations = clamp(document.getElementById("surveyCitations").value, 0, 10);
-      const leaderTurnover  = clamp(document.getElementById("leaderTurnover").value, 0, 10);
+      const otHours = clamp(inputs.otHours, 0, 500);
+      const otPremium = clamp(inputs.otPremium, 0, 100);
+      const agencyPremium = clamp(inputs.agencyPremium, 0, 100);
 
-      const turnoverRate    = clamp(document.getElementById("turnoverRate").value, 0, 100);
-      const vacancies       = clamp(document.getElementById("vacancies").value, 0, 20);
-      const timeToFill      = clamp(document.getElementById("timeToFill").value, 0, 120);
-      const recruitSpend    = clamp(document.getElementById("recruitSpend").value, 0, 50000);
+      const pbjRisk = clamp(inputs.pbjRisk, 0, 10);
+      const surveyCitations = clamp(inputs.surveyCitations, 0, 10);
+      const leaderTurnover = clamp(inputs.leaderTurnover, 0, 10);
 
-      // --- Normalize each dimension to a 0–25 "risk slice" ---
+      const turnoverRate = clamp(inputs.turnoverRate, 0, 100);
+      const vacancies = clamp(inputs.vacancies, 0, 20);
+      const timeToFill = clamp(inputs.timeToFill, 0, 120);
+      const recruitSpend = clamp(inputs.recruitSpend, 0, 50000);
+
+      // Normalize each dimension to a 0–25 risk slice
       const volScore =
         ((openShifts / 50) + (percentPRN / 100) + (callOffs / 20)) / 3 * 25;
 
@@ -660,12 +1052,12 @@
       const totalRisk = volScore + finScore + opScore + workforceScore;
       const shsiScore = Math.round(100 - totalRisk);
 
-      // --- Derived economic views ---
+      // Economics
       const annualVolatilityCost = (totalRisk / 100) * 2000000;
       const stabilizableUpside = annualVolatilityCost * 0.4;
       const workforceDragCost = (workforceScore / 25) * 1000000;
 
-      // --- Update main summary UI ---
+      // Update summary UI
       const scoreEl = document.getElementById("shsiScore");
       const tagEl = document.getElementById("scoreTag");
       scoreEl.textContent = isNaN(shsiScore) ? "–" : shsiScore;
@@ -686,7 +1078,7 @@
       document.getElementById("stabilizableUpside").textContent = formatCurrency(stabilizableUpside);
       document.getElementById("workforceDrag").textContent = formatCurrency(workforceDragCost);
 
-      // --- Candidate Sourcing Scenario ---
+      // Candidate sourcing scenario
       const improvedWorkforceScore = workforceScore * 0.7;
       const improvedTotalRisk = volScore + finScore + opScore + improvedWorkforceScore;
       const improvedShsi = Math.round(100 - improvedTotalRisk);
@@ -699,33 +1091,35 @@
 
       const deltaShsi = improvedShsi - shsiScore;
       document.getElementById("deltaShsiCell").textContent =
-        isNaN(deltaShsi) ? "–" :
-        (deltaShsi >= 0 ? "+" + deltaShsi : deltaShsi);
+        isNaN(deltaShsi) ? "–" : (deltaShsi >= 0 ? "+" + deltaShsi : deltaShsi);
       document.getElementById("deltaShsiCell").className =
         deltaShsi >= 0 ? "delta-positive" : "delta-negative";
 
       document.getElementById("currentVolCostCell").textContent = formatCurrency(annualVolatilityCost);
       document.getElementById("withSourcingVolCostCell").textContent = formatCurrency(improvedVolCost);
       const deltaVol = improvedVolCost - annualVolatilityCost;
-      document.getElementById("deltaVolCostCell").textContent =
-        isNaN(deltaVol) ? "–" :
-        (deltaVol <= 0 ? formatCurrency(deltaVol) : "+" + formatCurrency(deltaVol).slice(1));
+      const deltaVolText = isNaN(deltaVol)
+        ? "–"
+        : (deltaVol <= 0 ? formatCurrency(deltaVol) : "+" + formatCurrency(deltaVol).slice(1));
+      document.getElementById("deltaVolCostCell").textContent = deltaVolText;
       document.getElementById("deltaVolCostCell").className =
         deltaVol <= 0 ? "delta-positive" : "delta-negative";
 
       document.getElementById("currentWorkforceCell").textContent = formatCurrency(workforceDragCost);
       document.getElementById("withSourcingWorkforceCell").textContent = formatCurrency(improvedWorkforceDrag);
       const deltaWork = improvedWorkforceDrag - workforceDragCost;
-      document.getElementById("deltaWorkforceCell").textContent =
-        isNaN(deltaWork) ? "–" :
-        (deltaWork <= 0 ? formatCurrency(deltaWork) : "+" + formatCurrency(deltaWork).slice(1));
+      const deltaWorkText = isNaN(deltaWork)
+        ? "–"
+        : (deltaWork <= 0 ? formatCurrency(deltaWork) : "+" + formatCurrency(deltaWork).slice(1));
+      document.getElementById("deltaWorkforceCell").textContent = deltaWorkText;
       document.getElementById("deltaWorkforceCell").className =
         deltaWork <= 0 ? "delta-positive" : "delta-negative";
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      const inputs = document.querySelectorAll("input[type='number']");
-      inputs.forEach(input => {
+      // Attach change listeners
+      const numericInputs = document.querySelectorAll("input[type='number']");
+      numericInputs.forEach(input => {
         input.addEventListener("input", updateSHSI);
       });
 
