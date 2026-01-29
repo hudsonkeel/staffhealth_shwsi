@@ -224,6 +224,13 @@
       font-size: 0.8rem;
     }
 
+    .total-cell {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-align: right;
+      min-width: 80px;
+    }
+
     /* Summary layout */
     .summary-grid {
       display: grid;
@@ -561,6 +568,7 @@
               <th>Low band</th>
               <th>Mid band</th>
               <th>High band</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -572,6 +580,7 @@
               <td><input type="number" id="openShiftsLow" class="small-input" min="0" value="6" /></td>
               <td><input type="number" id="openShiftsMid" class="small-input" min="0" value="9" /></td>
               <td><input type="number" id="openShiftsHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalOpenShifts">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -581,6 +590,7 @@
               <td><input type="number" id="percentPRNLow" class="small-input" min="0" value="7" /></td>
               <td><input type="number" id="percentPRNMid" class="small-input" min="0" value="8" /></td>
               <td><input type="number" id="percentPRNHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalPercentPRN">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -590,6 +600,7 @@
               <td><input type="number" id="callOffsLow" class="small-input" min="0" value="8" /></td>
               <td><input type="number" id="callOffsMid" class="small-input" min="0" value="7" /></td>
               <td><input type="number" id="callOffsHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalCallOffs">0 / 0</span></td>
             </tr>
           </tbody>
         </table>
@@ -605,6 +616,7 @@
               <th>Low band</th>
               <th>Mid band</th>
               <th>High band</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -616,6 +628,7 @@
               <td><input type="number" id="otHoursLow" class="small-input" min="0" value="7" /></td>
               <td><input type="number" id="otHoursMid" class="small-input" min="0" value="9" /></td>
               <td><input type="number" id="otHoursHigh" class="small-input" min="0" value="4" /></td>
+              <td class="total-cell"><span id="totalOtHours">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -625,6 +638,7 @@
               <td><input type="number" id="otPremiumLow" class="small-input" min="0" value="6" /></td>
               <td><input type="number" id="otPremiumMid" class="small-input" min="0" value="9" /></td>
               <td><input type="number" id="otPremiumHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalOtPremium">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -634,6 +648,7 @@
               <td><input type="number" id="agencyPremiumLow" class="small-input" min="0" value="5" /></td>
               <td><input type="number" id="agencyPremiumMid" class="small-input" min="0" value="10" /></td>
               <td><input type="number" id="agencyPremiumHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalAgencyPremium">0 / 0</span></td>
             </tr>
           </tbody>
         </table>
@@ -649,6 +664,7 @@
               <th>Low band</th>
               <th>Mid band</th>
               <th>High band</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -660,6 +676,7 @@
               <td><input type="number" id="pbjRiskLow" class="small-input" min="0" value="8" /></td>
               <td><input type="number" id="pbjRiskMid" class="small-input" min="0" value="7" /></td>
               <td><input type="number" id="pbjRiskHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalPbjRisk">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -669,6 +686,7 @@
               <td><input type="number" id="surveyCitationsLow" class="small-input" min="0" value="9" /></td>
               <td><input type="number" id="surveyCitationsMid" class="small-input" min="0" value="7" /></td>
               <td><input type="number" id="surveyCitationsHigh" class="small-input" min="0" value="4" /></td>
+              <td class="total-cell"><span id="totalSurveyCitations">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -678,6 +696,7 @@
               <td><input type="number" id="leaderTurnoverLow" class="small-input" min="0" value="10" /></td>
               <td><input type="number" id="leaderTurnoverMid" class="small-input" min="0" value="6" /></td>
               <td><input type="number" id="leaderTurnoverHigh" class="small-input" min="0" value="4" /></td>
+              <td class="total-cell"><span id="totalLeaderTurnover">0 / 0</span></td>
             </tr>
           </tbody>
         </table>
@@ -693,6 +712,7 @@
               <th>Low band</th>
               <th>Mid band</th>
               <th>High band</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -704,6 +724,7 @@
               <td><input type="number" id="turnoverRateLow" class="small-input" min="0" value="5" /></td>
               <td><input type="number" id="turnoverRateMid" class="small-input" min="0" value="9" /></td>
               <td><input type="number" id="turnoverRateHigh" class="small-input" min="0" value="6" /></td>
+              <td class="total-cell"><span id="totalTurnoverRate">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -713,6 +734,7 @@
               <td><input type="number" id="vacanciesLow" class="small-input" min="0" value="7" /></td>
               <td><input type="number" id="vacanciesMid" class="small-input" min="0" value="8" /></td>
               <td><input type="number" id="vacanciesHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalVacancies">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -722,6 +744,7 @@
               <td><input type="number" id="timeToFillLow" class="small-input" min="0" value="6" /></td>
               <td><input type="number" id="timeToFillMid" class="small-input" min="0" value="9" /></td>
               <td><input type="number" id="timeToFillHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalTimeToFill">0 / 0</span></td>
             </tr>
             <tr>
               <td>
@@ -731,6 +754,7 @@
               <td><input type="number" id="recruitSpendLow" class="small-input" min="0" value="8" /></td>
               <td><input type="number" id="recruitSpendMid" class="small-input" min="0" value="7" /></td>
               <td><input type="number" id="recruitSpendHigh" class="small-input" min="0" value="5" /></td>
+              <td class="total-cell"><span id="totalRecruitSpend">0 / 0</span></td>
             </tr>
           </tbody>
         </table>
@@ -1016,6 +1040,47 @@
       }
     }
 
+    function updatePortfolioTotals() {
+      const size = Number(document.getElementById("portfolioSize")?.value) || 0;
+
+      function handleRow(lowId, midId, highId, totalSpanId) {
+        const low = Number(document.getElementById(lowId)?.value) || 0;
+        const mid = Number(document.getElementById(midId)?.value) || 0;
+        const high = Number(document.getElementById(highId)?.value) || 0;
+        const sum = low + mid + high;
+        const span = document.getElementById(totalSpanId);
+        if (!span) return;
+        span.textContent = size > 0 ? `${sum} / ${size}` : `${sum} / 0`;
+
+        if (size === 0) {
+          span.style.color = "#555555";
+        } else if (sum < size) {
+          span.style.color = "#b38600"; // yellow-ish for below
+        } else if (sum === size) {
+          span.style.color = "#1f6b33"; // green for match
+        } else if (sum > size) {
+          span.style.color = "#b12c1c"; // red for over
+        }
+      }
+
+      handleRow("openShiftsLow", "openShiftsMid", "openShiftsHigh", "totalOpenShifts");
+      handleRow("percentPRNLow", "percentPRNMid", "percentPRNHigh", "totalPercentPRN");
+      handleRow("callOffsLow", "callOffsMid", "callOffsHigh", "totalCallOffs");
+
+      handleRow("otHoursLow", "otHoursMid", "otHoursHigh", "totalOtHours");
+      handleRow("otPremiumLow", "otPremiumMid", "otPremiumHigh", "totalOtPremium");
+      handleRow("agencyPremiumLow", "agencyPremiumMid", "agencyPremiumHigh", "totalAgencyPremium");
+
+      handleRow("pbjRiskLow", "pbjRiskMid", "pbjRiskHigh", "totalPbjRisk");
+      handleRow("surveyCitationsLow", "surveyCitationsMid", "surveyCitationsHigh", "totalSurveyCitations");
+      handleRow("leaderTurnoverLow", "leaderTurnoverMid", "leaderTurnoverHigh", "totalLeaderTurnover");
+
+      handleRow("turnoverRateLow", "turnoverRateMid", "turnoverRateHigh", "totalTurnoverRate");
+      handleRow("vacanciesLow", "vacanciesMid", "vacanciesHigh", "totalVacancies");
+      handleRow("timeToFillLow", "timeToFillMid", "timeToFillHigh", "totalTimeToFill");
+      handleRow("recruitSpendLow", "recruitSpendMid", "recruitSpendHigh", "totalRecruitSpend");
+    }
+
     function updateSHSI() {
       const inputs = getInputs();
 
@@ -1114,13 +1179,19 @@
       document.getElementById("deltaWorkforceCell").textContent = deltaWorkText;
       document.getElementById("deltaWorkforceCell").className =
         deltaWork <= 0 ? "delta-positive" : "delta-negative";
+
+      // Update portfolio totals if in portfolio mode
+      updatePortfolioTotals();
     }
 
     document.addEventListener("DOMContentLoaded", function () {
       // Attach change listeners
       const numericInputs = document.querySelectorAll("input[type='number']");
       numericInputs.forEach(input => {
-        input.addEventListener("input", updateSHSI);
+        input.addEventListener("input", function () {
+          updateSHSI();
+          updatePortfolioTotals();
+        });
       });
 
       const modeInputs = document.querySelectorAll("input[name='mode']");
@@ -1128,11 +1199,13 @@
         input.addEventListener("change", function () {
           updateModeUI();
           updateSHSI();
+          updatePortfolioTotals();
         });
       });
 
       updateModeUI();
       updateSHSI();
+      updatePortfolioTotals();
     });
   </script>
 </body>
