@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>StaffHealth Stability Index (SHSI)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f5f7;
+      color: #222;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      margin-bottom: 4px;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin: 20px 0 8px;
+    }
+
+    p {
+      margin: 4px 0;
+      line-height: 1.5;
+    }
+
+    .subtitle {
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 16px 16px 18px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .dim-label {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .field {
+      margin-bottom: 8px;
+    }
+
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.86rem;
+      margin-bottom: 2px;
+    }
+
+    .field small {
+      color: #777;
+      font-size: 0.75rem;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 5px 6px;
+      border-radius: 6px;
+      border: 1px solid #d0d4dc;
+      font-size: 0.88rem;
+      box-sizing: border-box;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .summary-main {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .score-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+
+    .score-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid #ccc;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    .score-tag.high-risk {
+      border-color: #e5533d;
+      color: #b12c1c;
+      background: #fde8e5;
+    }
+
+    .score-tag.moderate-risk {
+      border-color: #f0aa2c;
+      color: #8a5a00;
+      background: #fff3db;
+    }
+
+    .score-tag.stable {
+      border-color: #3e9153;
+      color: #1f6b33;
+      background: #e4f6e8;
+    }
+
+    .kpi-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .kpi {
+      flex: 1 1 180px;
+      background: #f8f9fb;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.86rem;
+    }
+
+    .kpi-label {
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .kpi-value {
+      font-weight: 600;
+      font-size: 0.98rem;
+    }
+
+    .scenario-card h4 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 0.82rem;
+    }
+
+    th, td {
+      padding: 6px 8px;
+      text-align: left;
+      border-bottom: 1px solid #e0e3ea;
+    }
+
+    th {
+      background: #f3f4f8;
+      font-weight: 600;
+    }
+
+    .delta-positive {
+      color: #1f6b33;
+      font-weight: 600;
+    }
+
+    .delta-negative {
+      color: #b12c1c;
+      font-weight: 600;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: #777;
+      margin-top: 6px;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 0.78rem;
+      color: #777;
+    }
+
+    @media (max-width: 720px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>StaffHealth Stability Index (SHSI)</h1>
+    <p class="subtitle">
+      A diagnostic tool to quantify the hidden economics of staffing volatility, operational risk, and workforce stability — and model the upside of a StaffHealth + Accushield Verified elasticity layer + candidate sourcing.
+    </p>
+
+    <!-- INPUT GRID -->
+    <div class="grid">
+      <!-- Dimension 1: Staffing Volatility -->
+      <div class="card">
+        <h3>1. Staffing Volatility</h3>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:8px;">
+          How choppy is the current schedule? These inputs capture day-to-day instability on the floor.
+        </p>
+        <div class="field">
+          <label>
+            <span>Open shifts per week</span>
+            <small>0–50</small>
+          </label>
+          <input type="number" id="openShifts" min="0" max="50" value="8" />
+        </div>
+        <div class="field">
+          <label>
+            <span>% of shifts covered by agency/PRN</span>
+            <small>0–100%</small>
+          </label>
+          <input type="number" id="percentPRN" min="0" max="100" value="35" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Last-minute call-offs per week</span>
+            <small>0–20</small>
+          </label>
+          <input type="number" id="callOffs" min="0" max="20" value="4" />
+        </div>
+      </div>
+
+      <!-- Dimension 2: Financial Exposure -->
+      <div class="card">
+        <h3>2. Financial Exposure</h3>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:8px;">
+          Direct cost impact of volatility — especially overtime and premium labor.
+        </p>
+        <div class="field">
+          <label>
+            <span>Monthly overtime hours</span>
+            <small>0–500</small>
+          </label>
+          <input type="number" id="otHours" min="0" max="500" value="120" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Overtime premium (% above base)</span>
+            <small>0–100%</small>
+          </label>
+          <input type="number" id="otPremium" min="0" max="100" value="50" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Agency/PRN premium (% vs core staff)</span>
+            <small>0–100%</small>
+          </label>
+          <input type="number" id="agencyPremium" min="0" max="100" value="35" />
+        </div>
+      </div>
+
+      <!-- Dimension 3: Operational & Compliance Risk -->
+      <div class="card">
+        <h3>3. Operational &amp; Compliance Risk</h3>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:8px;">
+          Downstream impacts: PBJ, surveys, and leadership drag from instability.
+        </p>
+        <div class="field">
+          <label>
+            <span>PBJ exposure / risk score</span>
+            <small>0–10 (10 = high risk)</small>
+          </label>
+          <input type="number" id="pbjRisk" min="0" max="10" value="6" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Survey citations related to staffing (last 12 mo)</span>
+            <small>0–10</small>
+          </label>
+          <input type="number" id="surveyCitations" min="0" max="10" value="2" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Leadership turnover events (ED/DON/ADON, last 12 mo)</span>
+            <small>0–10</small>
+          </label>
+          <input type="number" id="leaderTurnover" min="0" max="10" value="1" />
+        </div>
+      </div>
+
+      <!-- Dimension 4: Workforce Stability (Candidate Sourcing) -->
+      <div class="card">
+        <h3>4. Workforce Stability (Pipeline)</h3>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:8px;">
+          How strong is the permanent staff pipeline? This is where candidate sourcing moves the needle.
+        </p>
+        <div class="field">
+          <label>
+            <span>Annual clinical staff turnover rate</span>
+            <small>0–100%</small>
+          </label>
+          <input type="number" id="turnoverRate" min="0" max="100" value="60" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Open clinical FTE vacancies</span>
+            <small>0–20</small>
+          </label>
+          <input type="number" id="vacancies" min="0" max="20" value="4" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Average time-to-fill for key roles (RN/LVN/CNA)</span>
+            <small>0–120 days</small>
+          </label>
+          <input type="number" id="timeToFill" min="0" max="120" value="60" />
+        </div>
+        <div class="field">
+          <label>
+            <span>Monthly external recruiting spend</span>
+            <small>$0–$50,000</small>
+          </label>
+          <input type="number" id="recruitSpend" min="0" max="50000" value="8000" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY / OUTPUT -->
+    <div class="summary-grid">
+      <div class="card summary-main">
+        <h2>Stability Snapshot</h2>
+        <p style="font-size:0.86rem; color:#555;">
+          Tweak the inputs above to see how volatility, risk, and workforce stability affect the overall StaffHealth Stability Index.
+        </p>
+
+        <div>
+          <div class="dim-label">Overall SHSI Score (0–100)</div>
+          <div class="score-badge">
+            <span class="score-number" id="shsiScore">–</span>
+            <span class="score-tag" id="scoreTag">Calculating…</span>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">Estimated Annual Volatility Cost</div>
+            <div class="kpi-value" id="volCost">$–</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Stabilizable Upside (StaffHealth + Verified)</div>
+            <div class="kpi-value" id="stabilizableUpside">$–</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Workforce Drag Cost (Pipeline Weakness)</div>
+            <div class="kpi-value" id="workforceDrag">$–</div>
+          </div>
+        </div>
+
+        <p class="note">
+          Note: Dollar figures are modeled estimates to frame the economic story. Assumptions (e.g., max volatility impact, stabilizable percentage) can be tuned with your PE / finance team.
+        </p>
+      </div>
+
+      <div class="card scenario-card">
+        <h2>Candidate Sourcing Scenario</h2>
+        <p style="font-size:0.82rem; color:#555;">
+          Illustrative view of what happens if StaffHealth runs a focused candidate sourcing program (e.g., reducing pipeline-related risk by ~30%).
+        </p>
+
+        <h4>With Candidate Sourcing Activated</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Current</th>
+              <th>With Sourcing</th>
+              <th>Delta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SHSI Score</td>
+              <td id="currentShsiCell">–</td>
+              <td id="withSourcingShsiCell">–</td>
+              <td id="deltaShsiCell">–</td>
+            </tr>
+            <tr>
+              <td>Annual Volatility Cost</td>
+              <td id="currentVolCostCell">–</td>
+              <td id="withSourcingVolCostCell">–</td>
+              <td id="deltaVolCostCell">–</td>
+            </tr>
+            <tr>
+              <td>Workforce Drag Cost</td>
+              <td id="currentWorkforceCell">–</td>
+              <td id="withSourcingWorkforceCell">–</td>
+              <td id="deltaWorkforceCell">–</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">
+          Assumes a 30% improvement in workforce stability metrics through StaffHealth candidate sourcing (complimentary when using our platform for PRN coverage).
+        </p>
+      </div>
+    </div>
+
+    <p class="footer-note">
+      Internal concept model — for strategy, portfolio conversations, and refinement with leadership / finance. Numbers are directional; the value is in framing the true cost of volatility and the upside of a stability partnership.
+    </p>
+  </div>
+
+  <script>
+    function clamp(value, min, max) {
+      value = Number(value);
+      if (isNaN(value)) return min;
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function formatCurrency(amount) {
+      if (isNaN(amount)) return "$–";
+      const abs = Math.abs(amount);
+      const sign = amount < 0 ? "-" : "";
+      return sign + "$" + abs.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    }
+
+    function updateSHSI() {
+      // --- Read inputs & clamp to reasonable ranges ---
+      const openShifts     = clamp(document.getElementById("openShifts").value, 0, 50);
+      const percentPRN     = clamp(document.getElementById("percentPRN").value, 0, 100);
+      const callOffs       = clamp(document.getElementById("callOffs").value, 0, 20);
+
+      const otHours        = clamp(document.getElementById("otHours").value, 0, 500);
+      const otPremium      = clamp(document.getElementById("otPremium").value, 0, 100);
+      const agencyPremium  = clamp(document.getElementById("agencyPremium").value, 0, 100);
+
+      const pbjRisk        = clamp(document.getElementById("pbjRisk").value, 0, 10);
+      const surveyCitations= clamp(document.getElementById("surveyCitations").value, 0, 10);
+      const leaderTurnover = clamp(document.getElementById("leaderTurnover").value, 0, 10);
+
+      const turnoverRate   = clamp(document.getElementById("turnoverRate").value, 0, 100);
+      const vacancies      = clamp(document.getElementById("vacancies").value, 0, 20);
+      const timeToFill     = clamp(document.getElementById("timeToFill").value, 0, 120);
+      const recruitSpend   = clamp(document.getElementById("recruitSpend").value, 0, 50000);
+
+      // --- Normalize each dimension to a 0–25 "risk slice" ---
+      // These are intentionally simple/transparent so you can explain and later tune.
+
+      // 1) Staffing Volatility
+      const volScore =
+        ((openShifts / 50) + (percentPRN / 100) + (callOffs / 20)) / 3 * 25;
+
+      // 2) Financial Exposure
+      const finScore =
+        ((otHours / 500) + (otPremium / 100) + (agencyPremium / 100)) / 3 * 25;
+
+      // 3) Operational & Compliance Risk
+      const opScore =
+        ((pbjRisk / 10) + (surveyCitations / 10) + (leaderTurnover / 10)) / 3 * 25;
+
+      // 4) Workforce Stability (Pipeline)
+      const workforceScore =
+        ((turnoverRate / 100) + (vacancies / 20) + (timeToFill / 120) + (recruitSpend / 50000)) / 4 * 25;
+
+      const totalRisk = volScore + finScore + opScore + workforceScore;
+      const shsiScore = Math.round(100 - totalRisk);
+
+      // --- Derived economic views (simple, explainable assumptions) ---
+      // Assume: at max risk (SHSI ~0) volatility costs ~ $2M / year.
+      const annualVolatilityCost = (totalRisk / 100) * 2000000;
+
+      // Assume: StaffHealth + Verified can realistically stabilize ~40% of that.
+      const stabilizableUpside = annualVolatilityCost * 0.4;
+
+      // Assume: workforce pipeline weakness (dimension 4) can represent up to $1M drag.
+      const workforceDragCost = (workforceScore / 25) * 1000000;
+
+      // --- Update main summary UI ---
+      const scoreEl = document.getElementById("shsiScore");
+      const tagEl = document.getElementById("scoreTag");
+      scoreEl.textContent = isNaN(shsiScore) ? "–" : shsiScore;
+
+      // risk tag
+      tagEl.classList.remove("high-risk","moderate-risk","stable");
+      if (shsiScore <= 50) {
+        tagEl.textContent = "High Risk";
+        tagEl.classList.add("high-risk");
+      } else if (shsiScore <= 75) {
+        tagEl.textContent = "Moderate Risk";
+        tagEl.classList.add("moderate-risk");
+      } else {
+        tagEl.textContent = "Relatively Stable";
+        tagEl.classList.add("stable");
+      }
+
+      document.getElementById("volCost").textContent = formatCurrency(annualVolatilityCost);
+      document.getElementById("stabilizableUpside").textContent = formatCurrency(stabilizableUpside);
+      document.getElementById("workforceDrag").textContent = formatCurrency(workforceDragCost);
+
+      // --- Candidate Sourcing Scenario ---
+      // Assume sourcing improves workforce stability metrics by ~30%.
+      const improvedWorkforceScore = workforceScore * 0.7;
+      const improvedTotalRisk = volScore + finScore + opScore + improvedWorkforceScore;
+      const improvedShsi = Math.round(100 - improvedTotalRisk);
+
+      const improvedVolCost = (improvedTotalRisk / 100) * 2000000;
+      const improvedWorkforceDrag = (improvedWorkforceScore / 25) * 1000000;
+
+      // Update scenario table
+      document.getElementById("currentShsiCell").textContent = isNaN(shsiScore) ? "–" : shsiScore;
+      document.getElementById("withSourcingShsiCell").textContent = isNaN(improvedShsi) ? "–" : improvedShsi;
+
+      const deltaShsi = improvedShsi - shsiScore;
+      document.getElementById("deltaShsiCell").textContent =
+        isNaN(deltaShsi) ? "–" :
+        (deltaShsi >= 0 ? "+" + deltaShsi : deltaShsi);
+      document.getElementById("deltaShsiCell").className = deltaShsi >= 0 ? "delta-positive" : "delta-negative";
+
+      document.getElementById("currentVolCostCell").textContent = formatCurrency(annualVolatilityCost);
+      document.getElementById("withSourcingVolCostCell").textContent = formatCurrency(improvedVolCost);
+      const deltaVol = improvedVolCost - annualVolatilityCost;
+      document.getElementById("deltaVolCostCell").textContent =
+        isNaN(deltaVol) ? "–" :
+        (deltaVol <= 0 ? formatCurrency(deltaVol) : "+" + formatCurrency(deltaVol).slice(1));
+      document.getElementById("deltaVolCostCell").className = deltaVol <= 0 ? "delta-positive" : "delta-negative";
+
+      document.getElementById("currentWorkforceCell").textContent = formatCurrency(workforceDragCost);
+      document.getElementById("withSourcingWorkforceCell").textContent = formatCurrency(improvedWorkforceDrag);
+      const deltaWork = improvedWorkforceDrag - workforceDragCost;
+      document.getElementById("deltaWorkforceCell").textContent =
+        isNaN(deltaWork) ? "–" :
+        (deltaWork <= 0 ? formatCurrency(deltaWork) : "+" + formatCurrency(deltaWork).slice(1));
+      document.getElementById("deltaWorkforceCell").className = deltaWork <= 0 ? "delta-positive" : "delta-negative";
+    }
+
+    // Attach listeners
+    document.addEventListener("DOMContentLoaded", function () {
+      const inputs = document.querySelectorAll("input[type='number']");
+      inputs.forEach(input => {
+        input.addEventListener("input", updateSHSI);
+      });
+      updateSHSI();
+    });
+  </script>
+</body>
+</html>
+
