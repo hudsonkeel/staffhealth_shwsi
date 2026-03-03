@@ -2,862 +2,935 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>StaffHealth Workforce Stability Index (WSI)</title>
+  <title>VOL Health™ – Workforce Stability Index (WSI)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* === Global layout & colors (aligned to original SHSI) === */
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f5f7;
-      color: #222222;
+    :root{
+      /* Shared brand colors (match VOL Health) */
+      --brand-blue:#1f57b8;
+      --brand-green:#2e8b57;
+      --brand-yellow:#f2b705;
+
+      --dark:#050814;
+      --bg:#050816;
+      --card:#0d1224;
+      --muted:#9399b3;
+      --border:#242944;
+      --danger:#df4759;
     }
 
-    /* === SHSI-style top header & mode banner === */
-    .shsi-header {
-      width: 100%;
-      margin: 0;
-      padding: 0;
+    *{
+      box-sizing:border-box;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      margin:0;
+      padding:0;
     }
 
-    .shsi-hero {
-      background: #111111;
-      color: #ffffff;
-      text-align: center;
-      padding: 18px 12px 14px;
+    body{
+      background:#1b1f2f;
+      color:#f5f6ff;
+      min-height:100vh;
+      padding:24px 12px 40px;
     }
 
-    .shsi-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    /* Outer shell (match VOL Health .page / .shell look) */
+    .shell{
+      max-width:1100px;
+      margin:0 auto;
+      border-radius:26px;
+      padding:0 0 32px;
+      background:radial-gradient(circle at top,#1a2338 0%,#111829 55%,#0c1220 100%);
+      box-shadow:0 22px 80px rgba(0,0,0,0.7);
+      overflow:hidden;
     }
 
-    .shsi-title-brand {
-      color: #1f66d1; /* StaffHealth blue accent */
-      margin-right: 4px;
+    /* === Header / hero strip adapted to dark theme === */
+    .shsi-header{
+      width:100%;
     }
 
-    .shsi-title-main {
-      color: #ffffff;
+    .shsi-hero{
+      background:linear-gradient(120deg,#050814 0%,#111829 40%,#1f57b8 100%);
+      color:#ffffff;
+      text-align:center;
+      padding:18px 12px 14px;
+      border-bottom:1px solid rgba(55,70,130,0.8);
     }
 
-    .shsi-tagline {
-      margin-top: 6px;
-      font-size: 0.8rem;
-      color: #dddddd;
-      max-width: 880px;
-      margin-left: auto;
-      margin-right: auto;
+    .shsi-title{
+      font-size:1.15rem;
+      font-weight:800;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
     }
 
-    .shsi-mode-banner {
-      background: #1f66d1;
-      color: #ffffff;
-      text-align: center;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 6px 10px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+    .shsi-title-brand{
+  color:var(--brand-blue); /* make VOL HEALTH blue everywhere */
+  margin-right:4px;
+}
+
+    .shsi-title-main{
+      color:#ffffff;
     }
 
-    /* === Main page content === */
-    .page {
-      max-width: 1100px;
-      margin: 18px auto 40px;
-      padding: 0 16px 40px;
+    .shsi-tagline{
+      margin-top:6px;
+      font-size:0.8rem;
+      color:#c4cae8;
+      max-width:880px;
+      margin-left:auto;
+      margin-right:auto;
+      line-height:1.5;
     }
 
-    h1 {
-      font-size: 1.7rem;
-      margin-bottom: 4px;
-      font-weight: 700;
+    .shsi-mode-banner{
+      background:rgba(31,87,184,0.2);
+      color:#c4d7ff;
+      text-align:center;
+      font-size:0.78rem;
+      font-weight:600;
+      padding:6px 10px;
+      letter-spacing:0.09em;
+      text-transform:uppercase;
+      border-top:1px solid rgba(36,41,68,0.9);
+      border-bottom:1px solid rgba(36,41,68,0.9);
     }
 
-    h2 {
-      font-size: 1.2rem;
-      margin: 20px 0 8px;
-      font-weight: 600;
-      color: #0054a6;
+    /* === Main inner page === */
+    .page{
+      padding:18px 18px 32px;
     }
 
-    p {
-      margin: 4px 0;
-      line-height: 1.5;
+    h1{
+      font-size:1.6rem;
+      margin-bottom:4px;
+      font-weight:700;
     }
 
-    .subtitle {
-      color: #555;
-      margin-bottom: 16px;
-      max-width: 840px;
-      font-size: 0.9rem;
+    h2{
+      font-size:1.1rem;
+      margin:20px 0 8px;
+      font-weight:600;
+      color:#dbe4ff;
     }
 
-    /* === Cards & grids === */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
+    h3{
+      font-size:1rem;
+      margin-bottom:6px;
+      font-weight:600;
+      color:#f5f6ff;
     }
 
-    .card {
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      padding: 16px 16px 18px;
-      border: 1px solid #e0e3eb;
+    p{
+      margin:4px 0;
+      line-height:1.5;
+      font-size:0.86rem;
+      color:#d5daf5;
     }
 
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #222;
+    .subtitle{
+      color:#c4cae8;
+      margin-bottom:16px;
+      max-width:840px;
+      font-size:0.9rem;
     }
 
-    .card p {
-      font-size: 0.8rem;
-      color: #666;
-      margin-bottom: 8px;
+    /* Cards & grids (dark theme) */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+      margin-top:16px;
     }
 
-    .dim-label {
-      font-weight: 600;
-      margin-bottom: 4px;
+    .card{
+      background:var(--card);
+      border-radius:16px;
+      box-shadow:0 14px 32px rgba(0,0,0,0.75);
+      padding:16px 16px 18px;
+      border:1px solid var(--border);
     }
 
-    .field {
-      margin-bottom: 8px;
+    .card p{
+      font-size:0.8rem;
+      color:#c4cae8;
+      margin-bottom:8px;
     }
 
-    .field label {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      font-size: 0.86rem;
-      margin-bottom: 2px;
+    .dim-label{
+      font-weight:600;
+      margin-bottom:4px;
+      color:#e3e6ff;
+      font-size:0.85rem;
     }
 
-    .field small {
-      color: #777;
-      font-size: 0.75rem;
-      margin-left: 6px;
+    .field{
+      margin-bottom:10px;
     }
 
-    input[type="number"] {
-      width: 100%;
-      padding: 5px 6px;
-      border-radius: 6px;
-      border: 1px solid #d0d4dc;
-      font-size: 0.88rem;
-      box-sizing: border-box;
-      font-family: inherit;
+    .field label{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      font-size:0.84rem;
+      margin-bottom:3px;
+      color:#e3e6ff;
     }
 
-    input[type="number"]:focus {
-      outline: none;
-      border-color: #0054a6;
-      box-shadow: 0 0 0 2px rgba(0,84,166,0.16);
+    .field small{
+      color:var(--muted);
+      font-size:0.75rem;
+      margin-left:6px;
+    }
+
+    input[type="number"]{
+      width:100%;
+      padding:6px 7px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      font-size:0.88rem;
+      box-sizing:border-box;
+      font-family:inherit;
+      background:#050814;
+      color:#f5f6ff;
+    }
+
+    input[type="number"]:focus{
+      outline:none;
+      border-color:var(--brand-blue);
+      box-shadow:0 0 0 2px rgba(31,87,184,0.45);
     }
 
     /* Mode card */
-    .mode-card {
-      margin-bottom: 16px;
+    .mode-card{
+      margin-bottom:16px;
     }
 
-    .mode-options {
-      margin-top: 6px;
-      margin-bottom: 4px;
+    .mode-options{
+      margin-top:6px;
+      margin-bottom:4px;
     }
 
-    .mode-options label {
-      display: block;
-      font-size: 0.86rem;
-      margin-bottom: 4px;
-      cursor: pointer;
+    .mode-options label{
+      display:block;
+      font-size:0.86rem;
+      margin-bottom:4px;
+      cursor:pointer;
+      color:#d5daf5;
     }
 
-    .mode-options input {
-      margin-right: 6px;
+    .mode-options input{
+      margin-right:6px;
+      accent-color:var(--brand-green);
     }
 
-    /* Show/hide depending on mode */
-    .single-only { display: block; }
-    .portfolio-only { display: none; }
+    .note{
+      font-size:0.78rem;
+      color:var(--muted);
+      margin-top:6px;
+    }
 
-    body.mode-portfolio .single-only { display: none; }
-    body.mode-portfolio .portfolio-only { display: block; }
+    /* Mode-driven visibility */
+    .single-only{display:block;}
+    .portfolio-only{display:none;}
+    body.mode-portfolio .single-only{display:none;}
+    body.mode-portfolio .portfolio-only{display:block;}
 
-    /* Portfolio distribution table */
-    .dist-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-      margin-top: 4px;
+    /* Portfolio tables */
+    .dist-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:0.78rem;
+      margin-top:4px;
+      color:#d5daf5;
     }
 
     .dist-table th,
-    .dist-table td {
-      padding: 4px 6px;
-      border-bottom: 1px solid #e0e3ea;
-      text-align: left;
+    .dist-table td{
+      padding:4px 6px;
+      border-bottom:1px solid #242944;
+      text-align:left;
     }
 
-    .dist-table th {
-      background: #f3f4f8;
-      font-weight: 600;
+    .dist-table th{
+      background:#12182e;
+      font-weight:600;
+      color:#f5f6ff;
     }
 
-    .dist-bands {
-      font-size: 0.76rem;
-      color: #666;
+    .dist-bands{
+      font-size:0.74rem;
+      color:var(--muted);
     }
 
-    .small-input {
-      width: 70px;
-      padding: 3px 4px;
-      font-size: 0.8rem;
+    .small-input{
+      width:70px;
+      padding:4px 5px;
+      font-size:0.8rem;
+      background:#050814;
+      border-radius:8px;
+      border:1px solid var(--border);
+      color:#f5f6ff;
     }
 
-    .total-cell {
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-align: right;
-      min-width: 80px;
+    .total-cell{
+      font-size:0.78rem;
+      font-weight:600;
+      text-align:right;
+      min-width:80px;
     }
 
     /* Summary layout */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-      gap: 16px;
-      margin-top: 20px;
+    .summary-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
+      gap:16px;
+      margin-top:20px;
     }
 
-    .summary-main {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .summary-main{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
 
-    .score-badge {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-top: 4px;
+    .score-badge{
+      display:inline-flex;
+      align-items:baseline;
+      gap:8px;
+      margin-top:4px;
     }
 
-    .score-number {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #0054a6;
+    .score-number{
+      font-size:2.2rem;
+      font-weight:800;
+      color:var(--brand-yellow);
     }
 
-    .score-tag {
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border: 1px solid #ccc;
-      text-transform: uppercase;
-      letter-spacing: .03em;
-      background: #f5f6fb;
-      color: #444;
+    .score-tag{
+      padding:3px 10px;
+      border-radius:999px;
+      font-size:0.75rem;
+      font-weight:700;
+      border:1px solid #515782;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      background:#12182e;
+      color:#e3e6ff;
     }
 
-    .score-tag.high-risk {
-      border-color: #e5533d;
-      color: #b12c1c;
-      background: #fde8e5;
+    .score-tag.high-risk{
+      border-color:#e5533d;
+      color:#ffd3ce;
+      background:rgba(223,71,89,0.18);
     }
 
-    .score-tag.moderate-risk {
-      border-color: #f0aa2c;
-      color: #8a5a00;
-      background: #fff3db;
+    .score-tag.moderate-risk{
+      border-color:#f0aa2c;
+      color:#ffe8c7;
+      background:rgba(242,183,5,0.18);
     }
 
-    .score-tag.stable {
-      border-color: #3e9153;
-      color: #1f6b33;
-      background: #e4f6e8;
+    .score-tag.stable{
+      border-color:#3e9153;
+      color:#c8f8d4;
+      background:rgba(46,139,87,0.18);
     }
 
-    .kpi-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 8px;
+    .kpi-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      margin-top:8px;
     }
 
-    .kpi {
-      flex: 1 1 180px;
-      background: #f8f9fb;
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 0.86rem;
-      border: 1px solid #e0e3ea;
+    .kpi{
+      flex:1 1 180px;
+      background:#050814;
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:0.86rem;
+      border:1px solid #252b49;
     }
 
-    .kpi-label {
-      color: #666;
-      margin-bottom: 4px;
+    .kpi-label{
+      color:var(--muted);
+      margin-bottom:4px;
     }
 
-    .kpi-value {
-      font-weight: 600;
-      font-size: 0.98rem;
-      color: #222;
+    .kpi-value{
+      font-weight:700;
+      font-size:0.98rem;
+      color:#e3e6ff;
     }
 
-    .scenario-card h4 {
-      margin: 0 0 6px;
-      font-size: 0.95rem;
-      color: #222;
+    /* Scenario card */
+    .scenario-card h2{
+      margin:0 0 8px;
+      font-size:1rem;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 6px;
-      font-size: 0.82rem;
+    .scenario-card h4{
+      margin:0 0 6px;
+      font-size:0.95rem;
+      color:#f5f6ff;
     }
 
-    th, td {
-      padding: 6px 8px;
-      text-align: left;
-      border-bottom: 1px solid #e0e3ea;
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:6px;
+      font-size:0.8rem;
+      color:#d5daf5;
     }
 
-    th {
-      background: #f3f4f8;
-      font-weight: 600;
-      color: #222;
+    th,td{
+      padding:6px 8px;
+      text-align:left;
+      border-bottom:1px solid #242944;
     }
 
-    .delta-positive {
-      color: #1f6b33;
-      font-weight: 600;
+    th{
+      background:#12182e;
+      font-weight:600;
+      color:#f5f6ff;
     }
 
-    .delta-negative {
-      color: #b12c1c;
-      font-weight: 600;
+    .delta-positive{
+      color:#7ce9b4;
+      font-weight:600;
     }
 
-    .note {
-      font-size: 0.78rem;
-      color: #777;
-      margin-top: 6px;
+    .delta-negative{
+      color:#ff9ba8;
+      font-weight:600;
     }
 
-    .footer-note {
-      margin-top: 20px;
-      font-size: 0.78rem;
-      color: #777;
-      max-width: 860px;
+    .footer-note{
+      margin-top:20px;
+      font-size:0.78rem;
+      color:var(--muted);
+      max-width:860px;
     }
 
-    @media (max-width: 720px) {
-      .summary-grid {
-        grid-template-columns: 1fr;
+    .attribution{
+      text-align:center;
+      font-size:11px;
+      color:#686f97;
+      margin-top:10px;
+      opacity:0.8;
+    }
+
+    @media (max-width:720px){
+      body{
+        padding:18px 8px 32px;
+      }
+      .shell{
+        border-radius:22px;
+      }
+      .page{
+        padding:14px 14px 28px;
+      }
+      .summary-grid{
+        grid-template-columns:1fr;
+      }
+      h1{
+        font-size:1.4rem;
+      }
+      .card{
+        padding:14px 12px 16px;
       }
     }
   </style>
 </head>
 <body class="mode-single">
-  <!-- Shared SHSI-style header -->
-  <div class="shsi-header">
-    <div class="shsi-hero">
-      <div class="shsi-title">
-        <span class="shsi-title-brand">STAFFHEALTH</span>
-        <span class="shsi-title-main">STABILITY INDEX™</span>
+  <div class="shell">
+    <!-- Shared header -->
+    <div class="shsi-header">
+      <div class="shsi-hero">
+        <div class="shsi-title">
+          <span class="shsi-title-brand">VOL HEALTH™</span>
+          <span class="shsi-title-main">WORKFORCE STABILITY INDEX (WSI)</span>
+        </div>
+        <div class="shsi-tagline">
+          Directional diagnostic that scores staffing “health” across volatility, risk, and workforce stability —
+          designed for single communities or portfolios. This screen is the Workforce Stability (WSI) view.
+        </div>
       </div>
-      <div class="shsi-tagline">
-        Directional diagnostic that scores staffing “health” across volatility, risk, and workforce stability —
-        designed for single communities or portfolios. This screen is the Workforce Stability (WSI) view.
+      <div class="shsi-mode-banner" id="modeBanner">
+        SINGLE COMMUNITY MODE — WORKFORCE STABILITY EDITION (WSI)
       </div>
     </div>
-    <div class="shsi-mode-banner" id="modeBanner">
-      SINGLE COMMUNITY MODE — WORKFORCE STABILITY EDITION (WSI)
-    </div>
-  </div>
 
-  <!-- Main WSI content -->
-  <div class="page">
-    <h1 id="snapshotTitle">Workforce Stability Snapshot</h1>
-    <p class="subtitle" id="snapshotSubtitle">
-      Adjust the inputs below to see how staffing volatility, financial exposure, operational risk, and workforce pipeline strength
-      roll up into a single Workforce Stability Index and economic view.
-    </p>
-
-    <!-- 1. Select Mode -->
-    <div class="card mode-card">
-      <h3>1. Select Mode</h3>
-      <p style="font-size:0.82rem; color:#555;">
-        Use <strong>Single Community Mode</strong> for ED / building-level discussions.
-        Use <strong>Portfolio Mode</strong> for VP Ops / portfolio roll-ups using distributions of communities across risk bands.
+    <!-- Main WSI content -->
+    <div class="page">
+      <h1 id="snapshotTitle">Workforce Stability Snapshot</h1>
+      <p class="subtitle" id="snapshotSubtitle">
+        Adjust the inputs below to see how staffing volatility, financial exposure, operational risk, and workforce pipeline strength
+        roll up into a single Workforce Stability Index and economic view.
       </p>
-      <div class="mode-options">
-        <label>
-          <input type="radio" name="mode" value="single" checked />
-          Single Community Mode (ED / building-level)
-        </label>
-        <label>
-          <input type="radio" name="mode" value="portfolio" />
-          Portfolio Mode (VP Ops / portfolio roll-up)
-        </label>
+
+      <!-- 1. Select Mode -->
+      <div class="card mode-card">
+        <h3>1. Select Mode</h3>
+        <p style="font-size:0.82rem;">
+          Use <strong>Single Community Mode</strong> for ED / building-level discussions.
+          Use <strong>Portfolio Mode</strong> for VP Ops / portfolio roll-ups using distributions of communities across risk bands.
+        </p>
+        <div class="mode-options">
+          <label>
+            <input type="radio" name="mode" value="single" checked />
+            Single Community Mode (ED / building-level)
+          </label>
+          <label>
+            <input type="radio" name="mode" value="portfolio" />
+            Portfolio Mode (VP Ops / portfolio roll-up)
+          </label>
+        </div>
+        <p class="note">
+          In Portfolio Mode, you enter how many communities fall into each risk band for every metric. The tool calculates portfolio-wide
+          averages and rolls them into a single WSI score and economic view.
+        </p>
       </div>
-      <p class="note">
-        In Portfolio Mode, you enter how many communities fall into each risk band for every metric. The tool calculates portfolio-wide
-        averages and rolls them into a single WSI score and economic view.
+
+      <!-- SINGLE COMMUNITY INPUT GRID -->
+      <div class="grid single-only">
+        <!-- Dimension 1: Staffing Volatility -->
+        <div class="card">
+          <h3>2. Staffing Volatility</h3>
+          <p>
+            How choppy is the current schedule? These inputs capture day-to-day instability on the floor.
+          </p>
+          <div class="field">
+            <label>
+              <span>Open shifts per week</span>
+              <small>0–50</small>
+            </label>
+            <input type="number" id="openShifts" min="0" max="50" value="8" />
+          </div>
+          <div class="field">
+            <label>
+              <span>% of shifts covered by agency/PRN</span>
+              <small>0–100%</small>
+            </label>
+            <input type="number" id="percentPRN" min="0" max="100" value="35" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Last-minute call-offs per week</span>
+              <small>0–20</small>
+            </label>
+            <input type="number" id="callOffs" min="0" max="20" value="4" />
+          </div>
+        </div>
+
+        <!-- Dimension 2: Financial Exposure -->
+        <div class="card">
+          <h3>3. Financial Exposure</h3>
+          <p>
+            Direct cost impact of volatility — especially overtime and premium labor.
+          </p>
+          <div class="field">
+            <label>
+              <span>Monthly overtime hours</span>
+              <small>0–500</small>
+            </label>
+            <input type="number" id="otHours" min="0" max="500" value="120" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Overtime premium (% above base)</span>
+              <small>0–100%</small>
+            </label>
+            <input type="number" id="otPremium" min="0" max="100" value="50" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Agency/PRN premium (% vs core staff)</span>
+              <small>0–100%</small>
+            </label>
+            <input type="number" id="agencyPremium" min="0" max="100" value="35" />
+          </div>
+        </div>
+
+        <!-- Dimension 3: Operational & Compliance Risk -->
+        <div class="card">
+          <h3>4. Operational &amp; Compliance Risk</h3>
+          <p>
+            Downstream impacts: PBJ, surveys, and leadership drag from instability.
+          </p>
+          <div class="field">
+            <label>
+              <span>PBJ exposure / risk score</span>
+              <small>0–10 (10 = high risk)</small>
+            </label>
+            <input type="number" id="pbjRisk" min="0" max="10" value="6" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Survey citations related to staffing (last 12 mo)</span>
+              <small>0–10</small>
+            </label>
+            <input type="number" id="surveyCitations" min="0" max="10" value="2" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Leadership turnover events (ED/DON/ADON, last 12 mo)</span>
+              <small>0–10</small>
+            </label>
+            <input type="number" id="leaderTurnover" min="0" max="10" value="1" />
+          </div>
+        </div>
+
+        <!-- Dimension 4: Workforce Stability (Pipeline) -->
+        <div class="card">
+          <h3>5. Workforce Stability (Pipeline)</h3>
+          <p>
+            How strong is the permanent staff pipeline? This is where candidate sourcing moves the needle.
+          </p>
+          <div class="field">
+            <label>
+              <span>Annual clinical staff turnover rate</span>
+              <small>0–100%</small>
+            </label>
+            <input type="number" id="turnoverRate" min="0" max="100" value="60" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Open clinical FTE vacancies</span>
+              <small>0–20</small>
+            </label>
+            <input type="number" id="vacancies" min="0" max="20" value="4" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Average time-to-fill for key roles (RN/LVN/CNA)</span>
+              <small>0–120 days</small>
+            </label>
+            <input type="number" id="timeToFill" min="0" max="120" value="60" />
+          </div>
+          <div class="field">
+            <label>
+              <span>Monthly external recruiting spend</span>
+              <small>$0–$50,000</small>
+            </label>
+            <input type="number" id="recruitSpend" min="0" max="50000" value="8000" />
+          </div>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO DISTRIBUTION INPUTS -->
+      <div class="grid portfolio-only">
+        <!-- Portfolio context + staffing volatility dist -->
+        <div class="card">
+          <h3>2. Portfolio Context & Staffing Volatility</h3>
+          <p style="font-size:0.8rem;">
+            Enter how many communities fall into each band. The tool converts this into portfolio-wide average values.
+          </p>
+          <div class="field">
+            <label>
+              <span>Total communities in this portfolio</span>
+              <small>(for your reference)</small>
+            </label>
+            <input type="number" id="portfolioSize" min="1" max="200" value="20" />
+          </div>
+
+          <table class="dist-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Low band</th>
+                <th>Mid band</th>
+                <th>High band</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Open shifts / week
+                  <div class="dist-bands">0–5 • 6–10 • 11+</div>
+                </td>
+                <td><input type="number" id="openShiftsLow" class="small-input" min="0" value="6" /></td>
+                <td><input type="number" id="openShiftsMid" class="small-input" min="0" value="9" /></td>
+                <td><input type="number" id="openShiftsHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalOpenShifts">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  % of shifts via agency/PRN
+                  <div class="dist-bands">0–25% • 26–50% • 51%+</div>
+                </td>
+                <td><input type="number" id="percentPRNLow" class="small-input" min="0" value="7" /></td>
+                <td><input type="number" id="percentPRNMid" class="small-input" min="0" value="8" /></td>
+                <td><input type="number" id="percentPRNHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalPercentPRN">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  Last-minute call-offs / week
+                  <div class="dist-bands">0–2 • 3–5 • 6+</div>
+                </td>
+                <td><input type="number" id="callOffsLow" class="small-input" min="0" value="8" /></td>
+                <td><input type="number" id="callOffsMid" class="small-input" min="0" value="7" /></td>
+                <td><input type="number" id="callOffsHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalCallOffs">0 / 0</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Financial exposure dist -->
+        <div class="card">
+          <h3>3. Financial Exposure (Portfolio)</h3>
+          <table class="dist-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Low band</th>
+                <th>Mid band</th>
+                <th>High band</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Monthly OT hours
+                  <div class="dist-bands">0–100 • 101–250 • 251+</div>
+                </td>
+                <td><input type="number" id="otHoursLow" class="small-input" min="0" value="7" /></td>
+                <td><input type="number" id="otHoursMid" class="small-input" min="0" value="9" /></td>
+                <td><input type="number" id="otHoursHigh" class="small-input" min="0" value="4" /></td>
+                <td class="total-cell"><span id="totalOtHours">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  OT premium vs base
+                  <div class="dist-bands">0–25% • 26–50% • 51%+</div>
+                </td>
+                <td><input type="number" id="otPremiumLow" class="small-input" min="0" value="6" /></td>
+                <td><input type="number" id="otPremiumMid" class="small-input" min="0" value="9" /></td>
+                <td><input type="number" id="otPremiumHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalOtPremium">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  Agency/PRN premium vs core staff
+                  <div class="dist-bands">0–20% • 21–40% • 41%+</div>
+                </td>
+                <td><input type="number" id="agencyPremiumLow" class="small-input" min="0" value="5" /></td>
+                <td><input type="number" id="agencyPremiumMid" class="small-input" min="0" value="10" /></td>
+                <td><input type="number" id="agencyPremiumHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalAgencyPremium">0 / 0</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Operational & compliance dist -->
+        <div class="card">
+          <h3>4. Operational &amp; Compliance Risk (Portfolio)</h3>
+          <table class="dist-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Low band</th>
+                <th>Mid band</th>
+                <th>High band</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  PBJ exposure / risk score
+                  <div class="dist-bands">0–3 • 4–7 • 8–10</div>
+                </td>
+                <td><input type="number" id="pbjRiskLow" class="small-input" min="0" value="8" /></td>
+                <td><input type="number" id="pbjRiskMid" class="small-input" min="0" value="7" /></td>
+                <td><input type="number" id="pbjRiskHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalPbjRisk">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  Staffing-related survey citations (12 mo)
+                  <div class="dist-bands">0 • 1–2 • 3+</div>
+                </td>
+                <td><input type="number" id="surveyCitationsLow" class="small-input" min="0" value="9" /></td>
+                <td><input type="number" id="surveyCitationsMid" class="small-input" min="0" value="7" /></td>
+                <td><input type="number" id="surveyCitationsHigh" class="small-input" min="0" value="4" /></td>
+                <td class="total-cell"><span id="totalSurveyCitations">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  Leadership turnover events (ED/DON/ADON, 12 mo)
+                  <div class="dist-bands">0–1 • 2–3 • 4+</div>
+                </td>
+                <td><input type="number" id="leaderTurnoverLow" class="small-input" min="0" value="10" /></td>
+                <td><input type="number" id="leaderTurnoverMid" class="small-input" min="0" value="6" /></td>
+                <td><input type="number" id="leaderTurnoverHigh" class="small-input" min="0" value="4" /></td>
+                <td class="total-cell"><span id="totalLeaderTurnover">0 / 0</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Workforce stability dist -->
+        <div class="card">
+          <h3>5. Workforce Stability (Pipeline) — Portfolio</h3>
+          <table class="dist-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Low band</th>
+                <th>Mid band</th>
+                <th>High band</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Annual clinical staff turnover rate
+                  <div class="dist-bands">0–30% • 31–60% • 61%+</div>
+                </td>
+                <td><input type="number" id="turnoverRateLow" class="small-input" min="0" value="5" /></td>
+                <td><input type="number" id="turnoverRateMid" class="small-input" min="0" value="9" /></td>
+                <td><input type="number" id="turnoverRateHigh" class="small-input" min="0" value="6" /></td>
+                <td class="total-cell"><span id="totalTurnoverRate">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  Open clinical FTE vacancies
+                  <div class="dist-bands">0–1 • 2–4 • 5+</div>
+                </td>
+                <td><input type="number" id="vacanciesLow" class="small-input" min="0" value="7" /></td>
+                <td><input type="number" id="vacanciesMid" class="small-input" min="0" value="8" /></td>
+                <td><input type="number" id="vacanciesHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalVacancies">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  Average time-to-fill (RN/LVN/CNA)
+                  <div class="dist-bands">0–30 d • 31–60 d • 61+ d</div>
+                </td>
+                <td><input type="number" id="timeToFillLow" class="small-input" min="0" value="6" /></td>
+                <td><input type="number" id="timeToFillMid" class="small-input" min="0" value="9" /></td>
+                <td><input type="number" id="timeToFillHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalTimeToFill">0 / 0</span></td>
+              </tr>
+              <tr>
+                <td>
+                  Monthly external recruiting spend
+                  <div class="dist-bands">$0–$5k • $5,001–$15k • $15k+</div>
+                </td>
+                <td><input type="number" id="recruitSpendLow" class="small-input" min="0" value="8" /></td>
+                <td><input type="number" id="recruitSpendMid" class="small-input" min="0" value="7" /></td>
+                <td><input type="number" id="recruitSpendHigh" class="small-input" min="0" value="5" /></td>
+                <td class="total-cell"><span id="totalRecruitSpend">0 / 0</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="note">
+            Band definitions are directional. The model converts these distributions into portfolio-wide average values for each metric.
+          </p>
+        </div>
+      </div>
+
+      <!-- SUMMARY / OUTPUT -->
+      <div class="summary-grid">
+        <div class="card summary-main">
+          <h2>Stability Index &amp; Economics</h2>
+          <p style="font-size:0.86rem;">
+            This summarizes the current state of the workforce and the modeled economic impact of volatility and pipeline weakness.
+          </p>
+
+          <div>
+            <div class="dim-label">Overall Workforce Stability Index (0–100)</div>
+            <div class="score-badge">
+              <span class="score-number" id="shsiScore">–</span>
+              <span class="score-tag" id="scoreTag">Calculating…</span>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">Estimated Annual Volatility Cost</div>
+              <div class="kpi-value" id="volCost">$–</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Stabilizable Upside (StaffHealth + Verified)</div>
+              <div class="kpi-value" id="stabilizableUpside">$–</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Workforce Drag Cost (Pipeline Weakness)</div>
+              <div class="kpi-value" id="workforceDrag">$–</div>
+            </div>
+          </div>
+
+          <p class="note">
+            Dollar figures are modeled estimates to frame the economic story. Assumptions
+            (e.g., max volatility impact, stabilizable percentage) can be tuned with your PE / finance partners.
+          </p>
+        </div>
+
+        <div class="card scenario-card">
+          <h2>Candidate Sourcing Scenario</h2>
+          <p style="font-size:0.82rem;">
+            Illustrative view of what happens if StaffHealth runs a focused candidate sourcing program
+            (e.g., reducing workforce-pipeline risk by ~30%).
+          </p>
+
+          <h4>With Candidate Sourcing Activated</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Current</th>
+                <th>With Sourcing</th>
+                <th>Delta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Stability Index</td>
+                <td id="currentShsiCell">–</td>
+                <td id="withSourcingShsiCell">–</td>
+                <td id="deltaShsiCell">–</td>
+              </tr>
+              <tr>
+                <td>Annual Volatility Cost</td>
+                <td id="currentVolCostCell">–</td>
+                <td id="withSourcingVolCostCell">–</td>
+                <td id="deltaVolCostCell">–</td>
+              </tr>
+              <tr>
+                <td>Workforce Drag Cost</td>
+                <td id="currentWorkforceCell">–</td>
+                <td id="withSourcingWorkforceCell">–</td>
+                <td id="deltaWorkforceCell">–</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="note">
+            Assumes a 30% improvement in workforce stability metrics through StaffHealth candidate sourcing
+            (complimentary when utilizing our platform for PRN coverage).
+          </p>
+        </div>
+      </div>
+
+      <p class="footer-note">
+        Internal concept model — for strategy, portfolio conversations, and refinement with leadership / finance.
+        The value is in framing the true cost of volatility and the upside of a StaffHealth workforce stability partnership.
       </p>
-    </div>
 
-    <!-- SINGLE COMMUNITY INPUT GRID -->
-    <div class="grid single-only">
-      <!-- Dimension 1: Staffing Volatility -->
-      <div class="card">
-        <h3>2. Staffing Volatility</h3>
-        <p>
-          How choppy is the current schedule? These inputs capture day-to-day instability on the floor.
-        </p>
-        <div class="field">
-          <label>
-            <span>Open shifts per week</span>
-            <small>0–50</small>
-          </label>
-          <input type="number" id="openShifts" min="0" max="50" value="8" />
-        </div>
-        <div class="field">
-          <label>
-            <span>% of shifts covered by agency/PRN</span>
-            <small>0–100%</small>
-          </label>
-          <input type="number" id="percentPRN" min="0" max="100" value="35" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Last-minute call-offs per week</span>
-            <small>0–20</small>
-          </label>
-          <input type="number" id="callOffs" min="0" max="20" value="4" />
-        </div>
-      </div>
-
-      <!-- Dimension 2: Financial Exposure -->
-      <div class="card">
-        <h3>3. Financial Exposure</h3>
-        <p>
-          Direct cost impact of volatility — especially overtime and premium labor.
-        </p>
-        <div class="field">
-          <label>
-            <span>Monthly overtime hours</span>
-            <small>0–500</small>
-          </label>
-          <input type="number" id="otHours" min="0" max="500" value="120" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Overtime premium (% above base)</span>
-            <small>0–100%</small>
-          </label>
-          <input type="number" id="otPremium" min="0" max="100" value="50" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Agency/PRN premium (% vs core staff)</span>
-            <small>0–100%</small>
-          </label>
-          <input type="number" id="agencyPremium" min="0" max="100" value="35" />
-        </div>
-      </div>
-
-      <!-- Dimension 3: Operational & Compliance Risk -->
-      <div class="card">
-        <h3>4. Operational &amp; Compliance Risk</h3>
-        <p>
-          Downstream impacts: PBJ, surveys, and leadership drag from instability.
-        </p>
-        <div class="field">
-          <label>
-            <span>PBJ exposure / risk score</span>
-            <small>0–10 (10 = high risk)</small>
-          </label>
-          <input type="number" id="pbjRisk" min="0" max="10" value="6" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Survey citations related to staffing (last 12 mo)</span>
-            <small>0–10</small>
-          </label>
-          <input type="number" id="surveyCitations" min="0" max="10" value="2" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Leadership turnover events (ED/DON/ADON, last 12 mo)</span>
-            <small>0–10</small>
-          </label>
-          <input type="number" id="leaderTurnover" min="0" max="10" value="1" />
-        </div>
-      </div>
-
-      <!-- Dimension 4: Workforce Stability (Pipeline) -->
-      <div class="card">
-        <h3>5. Workforce Stability (Pipeline)</h3>
-        <p>
-          How strong is the permanent staff pipeline? This is where candidate sourcing moves the needle.
-        </p>
-        <div class="field">
-          <label>
-            <span>Annual clinical staff turnover rate</span>
-            <small>0–100%</small>
-          </label>
-          <input type="number" id="turnoverRate" min="0" max="100" value="60" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Open clinical FTE vacancies</span>
-            <small>0–20</small>
-          </label>
-          <input type="number" id="vacancies" min="0" max="20" value="4" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Average time-to-fill for key roles (RN/LVN/CNA)</span>
-            <small>0–120 days</small>
-          </label>
-          <input type="number" id="timeToFill" min="0" max="120" value="60" />
-        </div>
-        <div class="field">
-          <label>
-            <span>Monthly external recruiting spend</span>
-            <small>$0–$50,000</small>
-          </label>
-          <input type="number" id="recruitSpend" min="0" max="50000" value="8000" />
-        </div>
+      <div class="attribution">
+        Prototype Model v0.4 — Concept and framework developed independently by Hudson Keel
+        for internal evaluation and strategic insight testing.
+        Not a final or officially endorsed StaffHealth product.
       </div>
     </div>
-
-    <!-- PORTFOLIO DISTRIBUTION INPUTS -->
-    <div class="grid portfolio-only">
-      <!-- Portfolio context + staffing volatility dist -->
-      <div class="card">
-        <h3>2. Portfolio Context & Staffing Volatility</h3>
-        <p style="font-size:0.8rem; color:#555;">
-          Enter how many communities fall into each band. The tool converts this into portfolio-wide average values.
-        </p>
-        <div class="field">
-          <label>
-            <span>Total communities in this portfolio</span>
-            <small>(for your reference)</small>
-          </label>
-          <input type="number" id="portfolioSize" min="1" max="200" value="20" />
-        </div>
-
-        <table class="dist-table">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th>Low band</th>
-              <th>Mid band</th>
-              <th>High band</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                Open shifts / week
-                <div class="dist-bands">0–5 • 6–10 • 11+</div>
-              </td>
-              <td><input type="number" id="openShiftsLow" class="small-input" min="0" value="6" /></td>
-              <td><input type="number" id="openShiftsMid" class="small-input" min="0" value="9" /></td>
-              <td><input type="number" id="openShiftsHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalOpenShifts">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                % of shifts via agency/PRN
-                <div class="dist-bands">0–25% • 26–50% • 51%+</div>
-              </td>
-              <td><input type="number" id="percentPRNLow" class="small-input" min="0" value="7" /></td>
-              <td><input type="number" id="percentPRNMid" class="small-input" min="0" value="8" /></td>
-              <td><input type="number" id="percentPRNHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalPercentPRN">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                Last-minute call-offs / week
-                <div class="dist-bands">0–2 • 3–5 • 6+</div>
-              </td>
-              <td><input type="number" id="callOffsLow" class="small-input" min="0" value="8" /></td>
-              <td><input type="number" id="callOffsMid" class="small-input" min="0" value="7" /></td>
-              <td><input type="number" id="callOffsHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalCallOffs">0 / 0</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Financial exposure dist -->
-      <div class="card">
-        <h3>3. Financial Exposure (Portfolio)</h3>
-        <table class="dist-table">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th>Low band</th>
-              <th>Mid band</th>
-              <th>High band</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                Monthly OT hours
-                <div class="dist-bands">0–100 • 101–250 • 251+</div>
-              </td>
-              <td><input type="number" id="otHoursLow" class="small-input" min="0" value="7" /></td>
-              <td><input type="number" id="otHoursMid" class="small-input" min="0" value="9" /></td>
-              <td><input type="number" id="otHoursHigh" class="small-input" min="0" value="4" /></td>
-              <td class="total-cell"><span id="totalOtHours">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                OT premium vs base
-                <div class="dist-bands">0–25% • 26–50% • 51%+</div>
-              </td>
-              <td><input type="number" id="otPremiumLow" class="small-input" min="0" value="6" /></td>
-              <td><input type="number" id="otPremiumMid" class="small-input" min="0" value="9" /></td>
-              <td><input type="number" id="otPremiumHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalOtPremium">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                Agency/PRN premium vs core staff
-                <div class="dist-bands">0–20% • 21–40% • 41%+</div>
-              </td>
-              <td><input type="number" id="agencyPremiumLow" class="small-input" min="0" value="5" /></td>
-              <td><input type="number" id="agencyPremiumMid" class="small-input" min="0" value="10" /></td>
-              <td><input type="number" id="agencyPremiumHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalAgencyPremium">0 / 0</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Operational & compliance dist -->
-      <div class="card">
-        <h3>4. Operational &amp; Compliance Risk (Portfolio)</h3>
-        <table class="dist-table">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th>Low band</th>
-              <th>Mid band</th>
-              <th>High band</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                PBJ exposure / risk score
-                <div class="dist-bands">0–3 • 4–7 • 8–10</div>
-              </td>
-              <td><input type="number" id="pbjRiskLow" class="small-input" min="0" value="8" /></td>
-              <td><input type="number" id="pbjRiskMid" class="small-input" min="0" value="7" /></td>
-              <td><input type="number" id="pbjRiskHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalPbjRisk">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                Staffing-related survey citations (12 mo)
-                <div class="dist-bands">0 • 1–2 • 3+</div>
-              </td>
-              <td><input type="number" id="surveyCitationsLow" class="small-input" min="0" value="9" /></td>
-              <td><input type="number" id="surveyCitationsMid" class="small-input" min="0" value="7" /></td>
-              <td><input type="number" id="surveyCitationsHigh" class="small-input" min="0" value="4" /></td>
-              <td class="total-cell"><span id="totalSurveyCitations">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                Leadership turnover events (ED/DON/ADON, 12 mo)
-                <div class="dist-bands">0–1 • 2–3 • 4+</div>
-              </td>
-              <td><input type="number" id="leaderTurnoverLow" class="small-input" min="0" value="10" /></td>
-              <td><input type="number" id="leaderTurnoverMid" class="small-input" min="0" value="6" /></td>
-              <td><input type="number" id="leaderTurnoverHigh" class="small-input" min="0" value="4" /></td>
-              <td class="total-cell"><span id="totalLeaderTurnover">0 / 0</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Workforce stability dist -->
-      <div class="card">
-        <h3>5. Workforce Stability (Pipeline) — Portfolio</h3>
-        <table class="dist-table">
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th>Low band</th>
-              <th>Mid band</th>
-              <th>High band</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                Annual clinical staff turnover rate
-                <div class="dist-bands">0–30% • 31–60% • 61%+</div>
-              </td>
-              <td><input type="number" id="turnoverRateLow" class="small-input" min="0" value="5" /></td>
-              <td><input type="number" id="turnoverRateMid" class="small-input" min="0" value="9" /></td>
-              <td><input type="number" id="turnoverRateHigh" class="small-input" min="0" value="6" /></td>
-              <td class="total-cell"><span id="totalTurnoverRate">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                Open clinical FTE vacancies
-                <div class="dist-bands">0–1 • 2–4 • 5+</div>
-              </td>
-              <td><input type="number" id="vacanciesLow" class="small-input" min="0" value="7" /></td>
-              <td><input type="number" id="vacanciesMid" class="small-input" min="0" value="8" /></td>
-              <td><input type="number" id="vacanciesHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalVacancies">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                Average time-to-fill (RN/LVN/CNA)
-                <div class="dist-bands">0–30 d • 31–60 d • 61+ d</div>
-              </td>
-              <td><input type="number" id="timeToFillLow" class="small-input" min="0" value="6" /></td>
-              <td><input type="number" id="timeToFillMid" class="small-input" min="0" value="9" /></td>
-              <td><input type="number" id="timeToFillHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalTimeToFill">0 / 0</span></td>
-            </tr>
-            <tr>
-              <td>
-                Monthly external recruiting spend
-                <div class="dist-bands">$0–$5k • $5,001–$15k • $15k+</div>
-              </td>
-              <td><input type="number" id="recruitSpendLow" class="small-input" min="0" value="8" /></td>
-              <td><input type="number" id="recruitSpendMid" class="small-input" min="0" value="7" /></td>
-              <td><input type="number" id="recruitSpendHigh" class="small-input" min="0" value="5" /></td>
-              <td class="total-cell"><span id="totalRecruitSpend">0 / 0</span></td>
-            </tr>
-          </tbody>
-        </table>
-        <p class="note">
-          Band definitions are directional. The model converts these distributions into portfolio-wide average values for each metric.
-        </p>
-      </div>
-    </div>
-
-    <!-- SUMMARY / OUTPUT -->
-    <div class="summary-grid">
-      <div class="card summary-main">
-        <h2>Stability Index & Economics</h2>
-        <p style="font-size:0.86rem; color:#555;">
-          This summarizes the current state of the workforce and the modeled economic impact of volatility and pipeline weakness.
-        </p>
-
-        <div>
-          <div class="dim-label">Overall Workforce Stability Index (0–100)</div>
-          <div class="score-badge">
-            <span class="score-number" id="shsiScore">–</span>
-            <span class="score-tag" id="scoreTag">Calculating…</span>
-          </div>
-        </div>
-
-        <div class="kpi-row">
-          <div class="kpi">
-            <div class="kpi-label">Estimated Annual Volatility Cost</div>
-            <div class="kpi-value" id="volCost">$–</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Stabilizable Upside (StaffHealth + Verified)</div>
-            <div class="kpi-value" id="stabilizableUpside">$–</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Workforce Drag Cost (Pipeline Weakness)</div>
-            <div class="kpi-value" id="workforceDrag">$–</div>
-          </div>
-        </div>
-
-        <p class="note">
-          Dollar figures are modeled estimates to frame the economic story. Assumptions
-          (e.g., max volatility impact, stabilizable percentage) can be tuned with your PE / finance partners.
-        </p>
-      </div>
-
-      <div class="card scenario-card">
-        <h2>Candidate Sourcing Scenario</h2>
-        <p style="font-size:0.82rem; color:#555;">
-          Illustrative view of what happens if StaffHealth runs a focused candidate sourcing program
-          (e.g., reducing workforce-pipeline risk by ~30%).
-        </p>
-
-        <h4>With Candidate Sourcing Activated</h4>
-        <table>
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th>Current</th>
-              <th>With Sourcing</th>
-              <th>Delta</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Stability Index</td>
-              <td id="currentShsiCell">–</td>
-              <td id="withSourcingShsiCell">–</td>
-              <td id="deltaShsiCell">–</td>
-            </tr>
-            <tr>
-              <td>Annual Volatility Cost</td>
-              <td id="currentVolCostCell">–</td>
-              <td id="withSourcingVolCostCell">–</td>
-              <td id="deltaVolCostCell">–</td>
-            </tr>
-            <tr>
-              <td>Workforce Drag Cost</td>
-              <td id="currentWorkforceCell">–</td>
-              <td id="withSourcingWorkforceCell">–</td>
-              <td id="deltaWorkforceCell">–</td>
-            </tr>
-          </tbody>
-        </table>
-        <p class="note">
-          Assumes a 30% improvement in workforce stability metrics through StaffHealth candidate sourcing
-          (complimentary when utilizing our platform for PRN coverage).
-        </p>
-      </div>
-    </div>
-
-       <p class="footer-note">
-      Internal concept model — for strategy, portfolio conversations, and refinement with leadership / finance.
-      The value is in framing the true cost of volatility and the upside of a StaffHealth workforce stability partnership.
-    </p>
-
-    <!-- Attribution Footer -->
-    <div style="text-align:center; font-size:11px; color:#777; margin-top:10px; opacity:0.75;">
-      Prototype Model v0.4 — Concept and framework developed independently by Hudson Keel
-      for internal evaluation and strategic insight testing.
-      Not a final or officially endorsed StaffHealth product.
-    </div>
-
   </div>
 
   <script>
@@ -1061,13 +1134,13 @@
         span.textContent = size > 0 ? `${sum} / ${size}` : `${sum} / 0`;
 
         if (size === 0) {
-          span.style.color = "#555555";
+          span.style.color = "#c4cae8";
         } else if (sum < size) {
-          span.style.color = "#b38600"; // yellow-ish for below
+          span.style.color = "#f2b705";
         } else if (sum === size) {
-          span.style.color = "#1f6b33"; // green for match
+          span.style.color = "#7ce9b4";
         } else if (sum > size) {
-          span.style.color = "#b12c1c"; // red for over
+          span.style.color = "#ff9ba8";
         }
       }
 
